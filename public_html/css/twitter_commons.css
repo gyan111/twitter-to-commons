@@ -1,0 +1,150 @@
+#tweet_div img{
+	/*margin-top: 10px*/
+	margin-bottom: 10px;
+}
+@media screen and (max-width:567em) {
+    .shadow-sm {
+    	margin-left:5px;
+    }
+    #tweet_div img{
+    	margin-top: 10px;
+    }
+}
+@media screen and (min-width:405px) {
+    /*.upload_tweet {
+        margin-left: 2px;
+    }*/
+}
+#loading {
+	display: none;
+}
+
+#tweet_div {
+    display: none;
+}
+
+/*.ui-autocomplete-input {
+  border: none; 
+  font-size: 14px;
+  width: 300px;
+  height: 24px;
+  margin-bottom: 5px;
+  padding-top: 2px;
+  border: 1px solid #DDD !important;
+  padding-top: 0px !important;
+  z-index: 1511;
+  position: relative;
+}*/
+.ui-menu .ui-menu-item a {
+  font-size: 12px;
+}
+.ui-autocomplete {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1510 !important;
+  float: left;
+  display: none;
+  min-width: 160px;
+  width: 160px;
+  padding: 2px 4px;
+  margin: 2px 0 0 0;
+  list-style: none;
+  background-color: #ffffff;
+  border-color: #ccc;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-style: solid;
+  border-width: 1px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  *border-right-width: 2px;
+  *border-bottom-width: 2px;
+}
+.ui-menu-item > a.ui-corner-all {
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: #555555;
+    white-space: nowrap;
+    text-decoration: none;
+}
+.ui-state-hover, .ui-state-active {
+      color: #ffffff;
+      text-decoration: none;
+      background-color: #0088cc;
+      border-radius: 0px;
+      -webkit-border-radius: 0px;
+      -moz-border-radius: 0px;
+      background-image: none;
+}
+
+.close {
+    margin-left: .25rem;
+    color: inherit;
+    font-size: 0.75rem !important;
+    line-height: 0.75 !important;;
+    text-shadow: 0 1px 0 rgba(#000, .5);
+}
+.dynamic-category{
+    margin-right: 4px;
+}
+.modal-body .form-group {
+    margin-bottom: 0.50rem;
+}
+.modal-body .form-group, .modal-body input, .modal-body textarea {
+    font-size: 14px;
+}
+.modal-message {
+    display: none;
+}
+.load_more_tweets {
+    display: none;
+    margin-top:20px;
+    margin-bottom:20px;
+}
+.no_tweets {
+    display: none;
+}
+/*.modal-content{
+  border:red 6px solid;
+}
+*/
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin-bottom: 60px; /* Margin bottom by footer height */
+}
+.footer {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px; /* Set the fixed height of the footer here */
+  line-height: 40px; /* Vertically center the text there */
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+.container {
+  width: auto;
+  /*max-width: 680px;*/
+  padding: 0 15px;
+}

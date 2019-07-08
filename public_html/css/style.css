@@ -1,0 +1,39 @@
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+	font-size: inherit;
+}
+.page-footer {
+    padding-top: 0px;
+}
+textarea.materialize-textarea{height: 6rem;}
+.row .col{
+    /*padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;*/
+}
+
+#overlay
+{
+    display : block;
+    position : fixed;
+    z-index: 100;
+    background-image : url('https://tools.wmflabs.org/gyan/img/loading.gif');
+    background-color:#666;
+    opacity : 0.4;
+    background-repeat : no-repeat;
+    background-position : center;
+    left : 0;
+    bottom : 0;
+    right : 0;
+    top : 0;
+}
+#overlay {
+   width : 100%;
+   height : 100%;
+}
+.error {
+    color: red;
+}
