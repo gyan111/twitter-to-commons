@@ -9,7 +9,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <!-- Favicons -->
-  <link href="{{ secure_asset('img/favicon.ico') }}" rel="icon">
+  <link rel="icon" href="{{ secure_asset('img/favicon.ico') }}" type="image/x-icon" />
   <link href="{{ secure_asset('img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
   <!-- Bootstrap css -->

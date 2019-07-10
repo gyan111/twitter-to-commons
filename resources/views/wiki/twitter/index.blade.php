@@ -17,10 +17,10 @@
 
 <div class="container">
 	<section id="general-page" class="wow fadeIn">
-		<div class="row mt-3">
+		<div class="row">
 			<div class="text-center col-sm-12">
-				<h2></h2>
-				<h2><strong>Twitter to commons</strong></h2>
+				<img src="{{ secure_asset('img/main_image.png') }}" width="150px" alt="Twitter to Commons" title="Twitter to Commons">
+				<h5><strong>Twitter to commons</strong></h5>
 				<p><strong>Upload photos from twitter to Wikimedia Commons.</strong></p>
 			</div>
 		</div>
