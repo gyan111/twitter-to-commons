@@ -497,7 +497,8 @@ class TwitterController extends Controller
             } else {
                 $url = '';
             }
-            return redirect($url);
+            // return redirect($url);
+            return redirect('/');
         }
 
         $client = $wiki->client;
