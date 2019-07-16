@@ -50,7 +50,7 @@
 					<a href="{{$upload->success_url}}">Commons Link</a>
 				</div>
 				<div class="col-sm-2 text-center">
-					<a href="https://twitter.com/ipr_odisha/status/{}{{$upload->tweet_id}}}">Tweet Link</a>
+					<a href="https://twitter.com/ipr_odisha/status/{{$upload->tweet_id}}}">Tweet Link</a>
 				</div>
 			</div>
 			@endforeach

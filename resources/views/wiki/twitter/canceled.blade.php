@@ -25,13 +25,13 @@
 				<div class="col-sm-2 text-center">
 					Username
 				</div>
-				<div class="col-sm-3 text-center">
+				<div class="col-sm-2 text-center">
 					Photos
 				</div>
 				<div class="col-sm-3 text-center">
 					Reason
 				</div>
-				<div class="col-sm-1 text-center">
+				<div class="col-sm-2 text-center">
 					Tweet Link
 				</div>
 				@if(isset($user) && $user->is_admin == 1)
@@ -48,14 +48,14 @@
 				<div class="col-sm-2 text-center">
 					<a href="https://commons.wikimedia.org/wiki/User:{{$upload->user->wiki_username}}">{{$upload->user->wiki_username}}</a>
 				</div>
-				<div class="col-sm-3 text-center">
+				<div class="col-sm-2 text-center">
 					<a data-fancybox="gallery" href="{{$upload->image_url_twitter}}"><img src="{{$upload->image_url_twitter}}" width="50px"></a>
 				</div>
 				<div class="col-sm-3 text-center">
 					{{$upload->form_data}}
 				</div>
-				<div class="col-sm-1 text-center">
-					<a href="https://twitter.com/ipr_odisha/status/{}{{$upload->tweet_id}}}">Tweet Link</a>
+				<div class="col-sm-2 text-center">
+					<a href="https://twitter.com/ipr_odisha/status/{{$upload->tweet_id}}}">Tweet Link</a>
 				</div>
 				@if(isset($user) && $user->is_admin == 1)
 				<div class="col-sm-1 text-center">
