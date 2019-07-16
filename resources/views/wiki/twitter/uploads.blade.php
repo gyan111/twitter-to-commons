@@ -41,16 +41,16 @@
 					{{$upload->created_at}}
 				</div>
 				<div class="col-sm-3 text-center">
-					<a href="https://commons.wikimedia.org/wiki/User:{{$upload->user->wiki_username}}">{{$upload->user->wiki_username}}</a>
+					<a target="_blank" href="https://commons.wikimedia.org/wiki/User:{{$upload->user->wiki_username}}">{{$upload->user->wiki_username}}</a>
 				</div>
 				<div class="col-sm-3 text-center">
 					<a data-fancybox="gallery" href="{{$upload->image_url_twitter}}"><img src="{{$upload->image_url_twitter}}" width="50px"></a>
 				</div>
 				<div class="col-sm-2 text-center">
-					<a href="{{$upload->success_url}}">Commons Link</a>
+					<a target="_blank" href="{{$upload->success_url}}">Commons Link</a>
 				</div>
 				<div class="col-sm-2 text-center">
-					<a href="https://twitter.com/ipr_odisha/status/{{$upload->tweet_id}}}">Tweet Link</a>
+					<a target="_blank" href="https://twitter.com/ipr_odisha/status/{{$upload->tweet_id}}">Tweet Link</a>
 				</div>
 			</div>
 			@endforeach
