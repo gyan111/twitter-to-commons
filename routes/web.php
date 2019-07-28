@@ -26,6 +26,12 @@ Route::get('statistics', 'TwitterController@statistics');
 Route::get('administration', 'TwitterController@administration');
 Route::post('ban', 'TwitterController@ban');
 Route::get('delete/{id}', 'TwitterController@delete');
+Route::get('request-new-account', 'TwitterController@requestAccount');
+Route::post('request-new-account', 'TwitterController@requestAccount');
+Route::get('approve/{id}', 'TwitterController@approve');
+Route::get('reject/{id}', 'TwitterController@reject');
+
+
 
 
 

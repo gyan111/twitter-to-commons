@@ -35,4 +35,8 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Upload');
     }
+    public function aproved()
+    {
+        return $this->hasMany('App\NewAccountRequest', 'approved_by');
+    }
 }

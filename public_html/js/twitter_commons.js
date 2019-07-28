@@ -73,6 +73,9 @@ $( document ).ready(function() {
 		  		} else if (data.status === 'error') {
 		  			swal("Oops!", "Please login first.", "error");
 					return false;
+		  		} else if (data.status === 'banned') {
+		  			swal("Oops!", "You are banned from using this tool.", "error");
+					return false;
 		  		}
 		  	} else {
 		  		swal("Oops!", "Please login first.", "error");

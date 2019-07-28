@@ -9,7 +9,7 @@
 @section('css')
 
 <link href="{{ secure_asset('css/style.css') }}" rel="stylesheet">
-<link href="{{ secure_asset('css/twitter_commons.css') }}" rel="stylesheet">
+<link href="{{ secure_asset('css/twitter_commons.css?1') }}" rel="stylesheet">
 
 @endsection
 
@@ -22,6 +22,7 @@
 				<img src="{{ secure_asset('img/main_image.png') }}" width="150px" alt="Twitter to Commons" title="Twitter to Commons">
 				<h5><strong>Twitter to commons</strong></h5>
 				<p><strong>Upload photos from twitter to Wikimedia Commons.</strong></p>
+				<p>All listed accounts have made their media free licensed with an OTRS token</p>
 			</div>
 		</div>
 		@if (!isset($user))
@@ -177,7 +178,7 @@
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 
 <script src="{{ secure_asset('js/jquery-ui.min.js') }}"></script>
-<script src="{{ secure_asset('js/twitter_commons.js') }}"></script>
+<script src="{{ secure_asset('js/twitter_commons.js?1') }}"></script>
 <script type="text/javascript">
     var base_url = '{{ secure_url('/') }}';
 </script>

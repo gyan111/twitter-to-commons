@@ -15,11 +15,12 @@
 	      	<li class="nav-item @if (Request::url() == url('/statistics')) active @endif>">
 	        	<a class="nav-link" href="{{ url('/statistics') }}">Statsistics</a>
 	      	</li>
-	      	@if (isset($user))
-	      	<li class="nav-item @if (Request::url() == url('/administartion')) active @endif>">
+	      	<li class="nav-item @if (Request::url() == url('/request-new-account')) active @endif>">
+	        	<a class="nav-link" href="{{ url('/request-new-account') }}">Request new account</a>
+	      	</li>
+	      	<li class="nav-item @if (Request::url() == url('/administration')) active @endif>">
 	        	<a class="nav-link" href="{{ url('/administration') }}">Administration</a>
 	      	</li>
-	      	@endif
 	      	<!-- <li class="nav-item dropdown">
 	        	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 	          		Dropdown

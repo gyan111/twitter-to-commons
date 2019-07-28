@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use App\Twitter;
 use App\User;
 use App\Upload;
+use App\NewAccountRequest;
 
 use MediaWiki\OAuthClient\ClientConfig;
 use MediaWiki\OAuthClient\Consumer;
@@ -69,12 +70,15 @@ class TwitterController extends Controller
 
         $wiki = new Wiki;
         $user = $wiki->checkAuth($request);
+
         $twitters = Twitter::all();
+        // $aprovedRequest = NewAccountRequest::where('is_approved', 1)->get();
+        // $twitterAccounts = $twitters->concat($aprovedRequest);
 
         if (!$user) {
-            return view('wiki.twitter.index')->withTwitters($twitters);
+            return view('wiki.twitter.index')->withTwitters($twitters->sortBy('name'));
         } else {
-            return view('wiki.twitter.index')->withuser($user)->withTwitters($twitters);
+            return view('wiki.twitter.index')->withuser($user)->withTwitters($twitters->sortBy('name'));
         }
         
     }
@@ -145,8 +149,14 @@ class TwitterController extends Controller
         // $tweet = json_decode($tweetRequest->getBody()); //object
         $tweet = json_decode($tweetRequest->getBody()->getContents(), true);
         foreach ($tweet['extended_entities']['media'] as $media) {
+            $categories = Twitter::where('handle',$tweet['user']['screen_name']);
+            $requestCategories = NewAccountRequest::where('handle',$tweet['user']['screen_name']);
+            if($categories->count() > 0) {
+                $category = Twitter::where('handle',$tweet['user']['screen_name'])->first()->category;
+            } else {
+                $category = '';
+            }
             if ($media['id_str'] == $mediaId) {
-
                 $responseData['status'] = 'success';
                 $responseData['media_id'] = $media['id_str'];
                 $responseData['handle'] = $tweet['user']['screen_name'];
@@ -156,7 +166,7 @@ class TwitterController extends Controller
                 $responseData['tweet_text'] = $tweetText;
                 $responseData['tweet_id'] = $tweetId;
                 $responseData['media_id'] = $mediaId;
-                $responseData['static_category'] = Twitter::where('handle',$tweet['user']['screen_name'])->first()->category;
+                $responseData['static_category'] = $category;
 
                 return $responseData;
             }
@@ -224,20 +234,25 @@ class TwitterController extends Controller
                 // $file = file_get_contents($path);
                 // $file = File::get($path); 
 
+                $twitterAccount = Twitter::where('handle',$tweet['user']['screen_name'])->first();
+                if ($twitterAccount->count() > 0) {
+                    $license = $twitterAccount->template;
+                    $author = $twitterAccount->author;
+                }
 
                 $text = '=={{int:filedesc}}==
 {{Information
 |description={{en|1='. $request->description .'}}
 |date='. $date->toDateTimeString() .'
 |source=[' . $media['expanded_url'] .' From Twitter account of '. $tweet['user']['name'] .']
-|author=[[:en:Government of Odisha|Government of Odisha]]
+|author=' . $author . '
 |permission=
 |other versions=
 }}
 
 =={{int:license-header}}==
 
-{{GoO-donation}}
+' . $license . '
 
 '. $categoryString . "\r\n" . '[[Category:Media uploaded using twitter to commons]]';
                 
@@ -260,6 +275,11 @@ class TwitterController extends Controller
                     $user->wiki_username = $wikiUser->username;
                     $user->email = ' ';
                     $user->save();
+                }
+                if ($user->is_banned == 1) {
+                    $responseData['status'] = 'error';
+                    $responseData['message'] = 'You are banned from using this tool';
+                    return $responseData;
                 }
                 $upload = new Upload;
                 $upload->user_id = $user->id;
@@ -410,56 +430,122 @@ class TwitterController extends Controller
 
     }
     public function administration(Request $request) {
-        $wiki = new Wiki;
-        $wikiUser = $wiki->checkAuth($request);
+        $users = User::all();
+        $accountRequests = NewAccountRequest::all();
+        $twitterAccounts = Twitter::all();
+        return view('wiki.twitter.administration')->withUsers($users)->withAccountRequests($accountRequests)->withTwitterAccounts($twitterAccounts);
 
-        if (!$wikiUser) {
-            return redirect('/');
-        }
-        $user = User::where('wiki_username', $wikiUser->username)->first();
-        if (!$user or $user->count() == 0) {
-            return redirect('/');
-        }
-        if ($user->is_admin == 1) {
-            $users = User::all();
-            return view('wiki.twitter.administration')->withUsers($users);
-        }
-        return redirect('/');
+        // $wiki = new Wiki;
+        // $wikiUser = $wiki->checkAuth($request);
+
+        // if (!$wikiUser) {
+        //     return redirect('/');
+        // }
+        // $user = User::where('wiki_username', $wikiUser->username)->first();
+        // if (!$user or $user->count() == 0) {
+        //     return redirect('/');
+        // }
+        // if ($user->is_admin == 1) {
+        //     $users = User::all();
+        //     return view('wiki.twitter.administration')->withUsers($users);
+        // }
+        // return redirect('/');
     }
     public function ban(Request $request) {
         $wiki = new Wiki;
         $wikiUser = $wiki->checkAuth($request);
 
         if (!$wikiUser) {
-            return redirect('/');
+            return back()->with('error','Please login.');
+
         }
         $user = User::where('wiki_username', $wikiUser->username)->first();
         if (!$user or $user->count() == 0) {
-            return redirect('/');
+            return back()->with('error','Only admins can perform this task.');
         }
         if ($user->is_admin == 1) {
             $banUser = User::find($request->user_id);
             $banUser->is_banned = 1;
             $banUser->save();
-            return redirect('administration');
+            return back()->with('success','The user is banned.');
         }
-        return redirect('/');
+        return back()->with('error','Only admins can perform this task.');
+
+    }
+    public function requestAccount(Request $request) {
+        if ($request->method() == 'POST') {
+            NewAccountRequest::create($request->all());
+            return back()->with('success','The request has been accepted.');
+        }
+        return view('wiki.twitter.request_new_account');
+    }
+    public function approve(Request $request, $id) {
+        $wiki = new Wiki;
+        $wikiUser = $wiki->checkAuth($request);
+
+        if (!$wikiUser) {
+            return back()->with('error','Please login.');
+
+        }
+        $user = User::where('wiki_username', $wikiUser->username)->first();
+        if (!$user or $user->count() == 0) {
+            return back()->with('error','Only admins can perform this task.');
+        }
+        if ($user->is_admin == 1) {
+            $accountRequest = NewAccountRequest::find($id);
+            $accountRequest->is_approved = 1;
+            $accountRequest->approved_by = $user->id;
+            $accountRequest->save();
+
+            $twitter = new Twitter;
+            $twitter->handle = $accountRequest->handle;
+            $twitter->name = $accountRequest->name;
+            $twitter->template = $accountRequest->template;
+            $twitter->category = $accountRequest->category;
+            $twitter->author = $accountRequest->author;
+            $twitter->save();
+            return back()->with('success','The account has been approved.');
+        }
+        return back()->with('error','Only admins can perform this task.');
+
+    }
+    public function reject(Request $request, $id) {
+        $wiki = new Wiki;
+        $wikiUser = $wiki->checkAuth($request);
+
+        if (!$wikiUser) {
+            return back()->with('error','Please login.');
+
+        }
+        $user = User::where('wiki_username', $wikiUser->username)->first();
+        if (!$user or $user->count() == 0) {
+            return back()->with('error','Only admins can perform this task.');
+        }
+        if ($user->is_admin == 1) {
+            $accountRequest = NewAccountRequest::find($id);
+            $accountRequest->is_approved = 2;
+            $accountRequest->approved_by = $user->id;
+            $accountRequest->save();
+            return back()->with('success','The account has been rejected.');
+        }
+        return back()->with('error','Only admins can perform this task.');
+
     }
     public function delete(Request $request, $id) {
         $wiki = new Wiki;
         $wikiUser = $wiki->checkAuth($request);
 
         if (!$wikiUser) {
-            return redirect('/');
+            return back()->with('error','Please login.');
         }
         $user = User::where('wiki_username', $wikiUser->username)->first();
         if (!$user or $user->count() == 0) {
-            return redirect('/');
+            return back()->with('error','Only admins can perform this task.');
         }
         if ($user->is_admin == 1) {
             $upload = Upload::find($id);
             $upload->delete();
-            return redirect()->back();
+            return back()->with('success','The tweet has been deleted.');
         }
         return redirect('/');
     }
@@ -495,10 +581,9 @@ class TwitterController extends Controller
                 $url = '/' . $request->session()->get('url');
                 $request->session()->forget('url');
             } else {
-                $url = '';
+                $url = '/';
             }
-            // return redirect($url);
-            return redirect('/');
+            return redirect()->to($url);
         }
 
         $client = $wiki->client;
@@ -539,4 +624,5 @@ class TwitterController extends Controller
         }
         return json_decode(json_encode($categories));
     }
+
 }
