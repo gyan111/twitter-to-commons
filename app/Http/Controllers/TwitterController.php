@@ -631,4 +631,28 @@ class TwitterController extends Controller
         return json_decode(json_encode($categories));
     }
 
+    public function searchTwitterUser(Request $request) {
+        $query = $request->q;
+
+        $twitterClient = new GuzzleClient(['http_errors' => false]);
+
+        $bearerToken = $request->session()->get('bearer_token');
+
+        $twitterClient = new GuzzleClient(['http_errors' => false]);
+
+        $url = 'https://api.twitter.com/1.1/users/lookup.json?screen_name=' . $query;
+
+        try {
+            $twitterUserRequest = $twitterClient->get($url, [
+                'headers' => ['Authorization' => 'Bearer '. $bearerToken],
+            ]);
+        } catch(GuzzleException $e) {
+            $response = $e->getResponse();
+            return $response;
+        }
+
+        $users = json_decode($twitterUserRequest->getBody()->getContents(), true);
+        var_dump($users);
+    }
+
 }

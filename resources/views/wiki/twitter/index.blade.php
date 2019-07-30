@@ -88,7 +88,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="alert alert-danger no_tweets" role="alert">
+		<div class="alert alert-danger no_tweets text-center" role="alert">
 		  No tweets to show now. Please check back later.
 		</div>
 		<div class="row mt-6 mb-6" id="loading">
@@ -137,7 +137,7 @@
 		            	<input type="text" class="form-control" id="permission" name="permission" placeholder="Specify, the reason for copyright free." required>
 		          	</div>
 		          	<div class="form-group">
-		            	<textarea class="form-control" id="other_information" name="other_information" placeholder="Add any other information like templates and categories. Ex. @{{Location|20.457279|85.884308}}" rows="2"></textarea>
+		            	<textarea class="form-control" id="other_information" name="other_information" placeholder="Add any other information like templates or categories. Ex. @{{Location|20.457279|85.884308}}" rows="2"></textarea>
 		          	</div>
 		            <input type="hidden" id="upload_media_id" name="upload_media_id" required>
 		            <input type="hidden" id="upload_tweet_id" name="upload_tweet_id" required>

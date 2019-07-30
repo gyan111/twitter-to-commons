@@ -28,15 +28,32 @@
 					</div>
 				@endif
 				<p><strong>Request for a new account to be listed in this tool.</strong></p>
-				<p>It is possible to show any twitter account images and upload them to Commons.</br>
-				To limit abuse or vandalism using this tool only accounts that have made their twitter content under free license </br>
-				and have got an OTRS token are allowed to be listed here</br>
-				However without an OTRS token adding a new account is possible if the account has made their content free licensed.</p>
-				<p>You can check format on <a href="{{ url('administration') }}">administration Page</a> aproved request section, before requesting new account.</p>
+				<p>All approved accounts show in free licensed account list. </br>While uplaoding the author and license is more clear and images have less chance of delete.</p>
+				<p>You can check approved account on <a href="{{ url('administration') }}">administration Page</a> aproved request section, before requesting new account.</p>
+				<table class="table table-hover table-bordered table-responsive">
+					<thead>
+						<tr>
+							<th>Handle</th>
+							<th>Name</th>
+							<th>Template</th>
+							<th>Categoty</th>
+							<th>Author</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a target="_blank" href="https://twitter.com/CMO_Odisha">CMO_Odisha</a></td>
+							<td>CMO_Odisha</td>
+							<td>@{{GoO-donation}}</td>
+							<td>Content donated by Government of Odisha</td>
+							<td>[[:en:Government of Odisha|Government of Odisha]]</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 		<div class="row mt-6">
-			<div class="col-sm-6 offset-sm-4">
+			<div class="col-sm-6 offset-sm-2">
 				<div class="alert alert-dismissible fade show" role="alert" ><strong>Request a new account here.</strong></div>
 				<form method="post">
 					@csrf

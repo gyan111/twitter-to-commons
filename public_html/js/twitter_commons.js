@@ -265,6 +265,19 @@ $( document ).ready(function() {
 	    	this.value = "";
 	    }
 	});
+
+	// $( "#twitter_handle_input" ).autocomplete({
+ //      source: function(request, response) {
+ //          $.ajax({
+ //            type: "GET",
+ //            url: base_url+"/search-twitter-user",
+ //            data: { q: request.term },
+ //            success: function(data) {
+ //              response(data);
+ //            }
+ //          });
+ //        },
+ //    });
 });
 
 

@@ -34,4 +34,3 @@ Route::get('reject/{id}', 'TwitterController@reject');
 
 
 
-

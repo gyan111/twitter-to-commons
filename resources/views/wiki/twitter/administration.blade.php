@@ -30,7 +30,7 @@
 					</div>
 				@endif
 				<p><strong>Administrative work</strong></p>
-				<p>Any action here can only be pefermed by Admins. For any queries please write on their talk page.</p>
+				<p>Any action here can only be performed by Admins. For any queries please write on their talk page.</p>
 				<p>
 					Current Admins are: 
 					@foreach($users as $wiki_user)
@@ -74,7 +74,7 @@
 			<div class="col-sm-10 offset-sm-1 text-center mt-3">
 				<hr class="col-xs-12">
 				<h5><span class="badge badge-primary">New account requests</span></h5> 
-				<table class="table table-hover table-bordered">
+				<table class="table table-hover table-bordered table-responsive">
 					<thead>
 						<tr>
 							<th>Handle</th>
@@ -102,7 +102,7 @@
 				</table>
 				<h5><span class="badge badge-success">Approved requests</span></h5> 
 
-				<table class="table table-hover table-bordered">
+				<table class="table table-hover table-bordered table-responsive">
 					<thead>
 						<tr>
 							<th>Handle</th>
@@ -141,7 +141,7 @@
 					</tbody>
 				</table>
 				<h5><span class="badge badge-warning">Rejected requests</span></h5> 
-				<table class="table">
+				<table class="table table-hover table-bordered table-responsive">
 					<thead>
 						<tr>
 							<th>Handle</th>
