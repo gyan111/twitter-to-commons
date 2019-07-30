@@ -22,6 +22,7 @@
 		<h5>Total number of failed uploads <span class="badge badge-danger">{{ count($uploads->where('status',0))}}</span></h5>
 		<h5>Total number of upload efforts <span class="badge badge-secondary">{{ count($uploads)}}</span></h5>
 		<hr>
+		<p>Total Users Involved: <strong>{{ App\User::all()->count()}}</strong></p>
 		<p>Top 5 Uploader</p>
 		<div class="col-sm-6">
 			<table class="table">
