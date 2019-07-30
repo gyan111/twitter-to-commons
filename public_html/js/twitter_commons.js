@@ -1,9 +1,26 @@
 $( document ).ready(function() {
+	$( "body" ).on( "change", "#twitter_handles_select", function(event) {
+		if ($('#twitter_handles_select').val() != "") {
+			$('#twitter_handle_input').val('');
+		}
+	});
+	$( "#twitter_handle_input" ).keyup(function() {
+	  	if ($('#twitter_handle_input').val() != "") {
+			$('#twitter_handles_select').val('');
+		}
+	});
+
 	$( "body" ).on( "click", "#show_tweets_button, #load_more_tweets", function(event) {
 		event.preventDefault();
-		if ($('#twitter_handles_select').val() == '') {
-			swal("Oops!", "Please select a handle first.", "error");
+		if ($('#twitter_handles_select').val() == '' && $('#twitter_handle_input').val() == '') {
+			swal("Oops!", "Please select or enter a twitter handle first.", "error");
 			return false;
+		} else {
+			if ($('#twitter_handles_select').val() != "") {
+				var handle = $('#twitter_handles_select').val();
+			} else if ($('#twitter_handle_input').val() != ""){
+				var handle = $('#twitter_handle_input').val();
+			}
 		}
 		if($(this).hasClass('load_more_tweets')) {
 			var tweetId = $('.media_id').last().val();
@@ -15,7 +32,7 @@ $( document ).ready(function() {
 		$('#loading').show();
 		$.ajax({
 		  type:"POST",
-		  data: { handle: $('#twitter_handles_select').val(), tweet_id: tweetId}
+		  data: { handle: handle, tweet_id: tweetId}
 		}).done(function(data) {
 		  if (typeof(data) == 'object') {
 			$('#loading').hide();
@@ -55,6 +72,7 @@ $( document ).ready(function() {
 			$('.dynamic-category').remove();
 			$('#name').val('');
 		  	$('#other_information').val('');
+		  	$('#permission').val('');
 		  	if (typeof(data) == 'object') {
 		  		if (data.status === 'success') {
 		  			// $('#name').val(data.handle + '-' + data.media_id);
@@ -70,6 +88,9 @@ $( document ).ready(function() {
 		  			$("#uploadModal .modal-content").css('border', 'white 0px solid');
 		  			$('.modal-message').hide();
 		  			$("#uploadModal").modal({show: true, backdrop: 'static', keyboard: false});
+		  			if ($("#twitter_handles_select option[value='"+ data.handle +"']").length > 0) {
+		  				$('.permission-div').hide();
+		  			}
 		  		} else if (data.status === 'error') {
 		  			swal("Oops!", "Please login first.", "error");
 					return false;

@@ -21,8 +21,8 @@
 			<div class="text-center col-sm-12">
 				<img src="{{ secure_asset('img/main_image.png') }}" width="150px" alt="Twitter to Commons" title="Twitter to Commons">
 				<h5><strong>Twitter to commons</strong></h5>
-				<p><strong>Upload photos from twitter to Wikimedia Commons.</strong></p>
-				<p>All listed accounts have made their media free licensed with an OTRS token</p>
+				<p><strong>Upload photos from Twitter to Wikimedia Commons.</strong></p>
+				<!-- <p>All listed accounts have made their media free licensed with an OTRS token</p> -->
 			</div>
 		</div>
 		@if (!isset($user))
@@ -43,13 +43,18 @@
 			<div class="col-sm-4 offset-sm-4">
 				<form>
 				  	<div class="form-group">
-						<!-- <label for="twitter_handles">Choose a twitter handle to show recent tweets</label> -->
+						<div class="text-center"><label for="twitter_handles text-center">You can choose from a free licensed account.</label></div>
 						<select class="form-control" id="twitter_handles_select" required>
 						  	<option value="" selected>Select a Twitter handle </option>
 						  	@foreach($twitters as $twitter)
 						  	<option value="{{$twitter->handle}}">{{$twitter->name}}</option>
 						  	@endforeach
 						</select>
+					</div>
+					<div class="text-center">OR</div>
+					<div class="form-group">
+						<div class="text-center"><label for="twitter_handle_input">Enter a twitter handle/username</label></div>
+						<input type="text" class="form-control" name="twitter_handle_input" id="twitter_handle_input">
 					</div>
 					<!-- <div class="form-group">
 						<select class="form-control" id="tweet_number" required>
@@ -127,6 +132,10 @@
 		          	<div class="form-group" id="categories_div">
 		            	<span class="badge badge-primary static-category"></span>
 		          	</div>
+	          		<div class="form-group permission-div">
+		            	<label for="permission" class="col-form-label">Permission</label>
+		            	<input type="text" class="form-control" id="permission" name="permission" placeholder="Specify, the reason for copyright free." required>
+		          	</div>
 		          	<div class="form-group">
 		            	<textarea class="form-control" id="other_information" name="other_information" placeholder="Add any other information like templates and categories. Ex. @{{Location|20.457279|85.884308}}" rows="2"></textarea>
 		          	</div>
@@ -178,7 +187,7 @@
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 
 <script src="{{ secure_asset('js/jquery-ui.min.js') }}"></script>
-<script src="{{ secure_asset('js/twitter_commons.js?1') }}"></script>
+<script src="{{ secure_asset('js/twitter_commons.js?2') }}"></script>
 <script type="text/javascript">
     var base_url = '{{ secure_url('/') }}';
 </script>

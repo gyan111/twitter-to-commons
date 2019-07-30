@@ -150,7 +150,6 @@ class TwitterController extends Controller
         $tweet = json_decode($tweetRequest->getBody()->getContents(), true);
         foreach ($tweet['extended_entities']['media'] as $media) {
             $categories = Twitter::where('handle',$tweet['user']['screen_name']);
-            $requestCategories = NewAccountRequest::where('handle',$tweet['user']['screen_name']);
             if($categories->count() > 0) {
                 $category = Twitter::where('handle',$tweet['user']['screen_name'])->first()->category;
             } else {
@@ -210,7 +209,9 @@ class TwitterController extends Controller
         $categories = json_decode($request->categories, true);
         $categoryString = '';
         foreach ($categories as $category) {
-            $categoryString = $categoryString . '[[Category:'. $category .']]' . "\r\n";
+            if ($category != '') {
+                $categoryString = $categoryString . '[[Category:'. $category .']]' . "\r\n";
+            }
         }
 
         foreach ($tweet['extended_entities']['media'] as $media) {
@@ -235,9 +236,14 @@ class TwitterController extends Controller
                 // $file = File::get($path); 
 
                 $twitterAccount = Twitter::where('handle',$tweet['user']['screen_name'])->first();
-                if ($twitterAccount->count() > 0) {
+                if ($twitterAccount) {
                     $license = $twitterAccount->template;
                     $author = $twitterAccount->author;
+                    $permission = $request->permission;
+                } else {
+                    $license = '{{cc-by-sa-4.0}}';
+                    $author = '[https://twitter.com/' . $tweet['user']['screen_name'] . " " . $tweet['user']['name'] . ']';
+                    $permission = $request->permission;
                 }
 
                 $text = '=={{int:filedesc}}==
@@ -246,7 +252,7 @@ class TwitterController extends Controller
 |date='. $date->toDateTimeString() .'
 |source=[' . $media['expanded_url'] .' From Twitter account of '. $tweet['user']['name'] .']
 |author=' . $author . '
-|permission=
+|permission=' . $permission . '
 |other versions=
 }}
 
