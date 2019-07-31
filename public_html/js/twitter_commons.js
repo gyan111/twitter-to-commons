@@ -46,7 +46,7 @@ $( document ).ready(function() {
 		  	  			 +'<input id="'+ value.image_id +'" class="tweet_id" name="tweet_id" type="hidden" value="'+ value.tweet_id +'">'
 		  	  			 +'<div class="col-sm-4">'+ value.tweet_text + '</div>'
 		  	  			 +'<div class="col-sm-4 text-center"><a data-fancybox="gallery" href="'+ value.img_url + '"><img height="100px" src= '+ value.img_url + ' class="tweet-image" title="Click to enlarge"></a></div>'
-		  	  			 +'<div class="col-sm-2 text-center"><a target="_blank" href="https://twitter.com/' + $('#twitter_handles_select').val() +'/status/' + value.tweet_id + '">Tweet Link</a></div>'
+		  	  			 +'<div class="col-sm-2 text-center"><a target="_blank" href="https://twitter.com/' + handle +'/status/' + value.tweet_id + '">Tweet Link</a></div>'
 		  	  			 +'<div class="col-sm-2 text-center"><button class="btn btn-sm btn-success col-sm-5 initialize_tweet  mr-1">Upload</button><button class="btn btn-sm btn-danger col-sm-5 cancel_tweet">Cancel</button></div></div>';
 		  	  	$('#tweet_div').append(html);
 		  	});
