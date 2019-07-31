@@ -88,7 +88,7 @@ $( document ).ready(function() {
 		  			$("#uploadModal .modal-content").css('border', 'white 0px solid');
 		  			$('.modal-message').hide();
 		  			$("#uploadModal").modal({show: true, backdrop: 'static', keyboard: false});
-		  			if ($("#twitter_handles_select option[value='"+ data.handle +"']").length > 0) {
+		  			if (data.show_permission == 0) {
 		  				$('.permission-div').hide();
 		  			}
 		  		} else if (data.status === 'error') {

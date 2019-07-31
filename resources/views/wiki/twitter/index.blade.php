@@ -187,7 +187,7 @@
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 
 <script src="{{ secure_asset('js/jquery-ui.min.js') }}"></script>
-<script src="{{ secure_asset('js/twitter_commons.js?2') }}"></script>
+<script src="{{ secure_asset('js/twitter_commons.js?3') }}"></script>
 <script type="text/javascript">
     var base_url = '{{ secure_url('/') }}';
 </script>

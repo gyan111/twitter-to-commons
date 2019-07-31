@@ -152,8 +152,10 @@ class TwitterController extends Controller
             $categories = Twitter::where('handle',$tweet['user']['screen_name']);
             if($categories->count() > 0) {
                 $category = Twitter::where('handle',$tweet['user']['screen_name'])->first()->category;
+                $show_permission = 0;
             } else {
                 $category = '';
+                $show_permission = 1;
             }
             if ($media['id_str'] == $mediaId) {
                 $responseData['status'] = 'success';
@@ -166,6 +168,7 @@ class TwitterController extends Controller
                 $responseData['tweet_id'] = $tweetId;
                 $responseData['media_id'] = $mediaId;
                 $responseData['static_category'] = $category;
+                $responseData['show_permission'] = $show_permission;
 
                 return $responseData;
             }
