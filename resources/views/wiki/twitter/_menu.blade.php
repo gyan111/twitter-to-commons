@@ -21,6 +21,9 @@
 	      	<li class="nav-item @if (Request::url() == url('/administration')) active @endif>">
 	        	<a class="nav-link" href="{{ url('/administration') }}">Administration</a>
 	      	</li>
+	      	<li class="nav-item @if (Request::url() == url('/administration')) active @endif>">
+	        	<a class="nav-link" target="_blank" href="https://wikitech.wikimedia.org/wiki/Tool:Twitter_to_Commons">Docs</a>
+	      	</li>
 	      	<!-- <li class="nav-item dropdown">
 	        	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 	          		Dropdown
