@@ -145,7 +145,7 @@
 		          	</div>
 	          		<div class="form-group permission-div">
 		            	<label for="permission" class="col-form-label">Permission</label>
-		            	<input type="text" class="form-control" id="permission" name="permission" placeholder="Specify, the reason for copyright free." required>
+		            	<input type="text" class="form-control" id="permission" name="permission" placeholder="Specify, the reason for copyright free. For own image use @{{own}}" required>
 		          	</div>
 		          	<div class="form-group">
 		            	<textarea class="form-control" id="other_information" name="other_information" placeholder="Add any other information like templates or categories. Ex. @{{Location|20.457279|85.884308}}" rows="2"></textarea>
