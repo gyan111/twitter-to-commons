@@ -19,6 +19,7 @@ use MediaWiki\OAuthClient\Client;
     
 class TwitterController extends Controller
 {
+    // show all recent tweets with details so that user can choose whether to upload or not.
     public function twitter(Request $request)
     {
         if($request->ajax()){
@@ -82,6 +83,51 @@ class TwitterController extends Controller
         }
         
     }
+    // get single twitter details
+    public function getTweet(Request $request)
+    {
+        if($request->ajax()){
+            $tweetIdLink = $request->tweet_id;
+
+            $tweetId = trim(explode('/', trim(substr($tweetIdLink, strpos($tweetIdLink, 'twitter.com') + 12)))[2]);
+
+            $bearerToken = $request->session()->get('bearer_token');
+            if (!$bearerToken) {
+                $this->twitterToken($request);
+            }
+            $bearerToken = $request->session()->get('bearer_token');
+
+            $twitterClient = new GuzzleClient(['http_errors' => false]);
+            
+            $url = 'https://api.twitter.com/1.1/statuses/show.json?tweet_mode=extended&id=' .$tweetId;
+            try {
+                $tweetRequest = $twitterClient->get($url, [
+                    'headers' => ['Authorization' => 'Bearer '. $bearerToken],
+                ]);
+            } catch(GuzzleException $e) {
+                $response = $e->getResponse();
+            }
+            $tweet = json_decode($tweetRequest->getBody());
+
+            $tweetData = array();
+            if (isset($tweet->entities->media)) {
+                foreach ($tweet->extended_entities->media as $media) {
+                    $tweetData[$media->id_str]['img_url'] = $media->media_url_https;
+                    $tweetData[$media->id_str]['image_id'] = $media->id_str;
+                    $tweetData[$media->id_str]['tweet_id'] = $tweet->id_str;
+                    $tweetData[$media->id_str]['tweet_text'] = $tweet->full_text;
+                    
+                    foreach ($tweet->entities->hashtags as $hashtag) {
+                        $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
+                    }
+                }
+                $tweetData[$media->id_str]['handle'] = $tweet->user->screen_name;
+            }
+            return $tweetData;
+        }
+    }
+
+    //get twitter token
     public function twitterToken(Request $request) {
         // $consumerKey = urlencode("jTzuaBtmmNimzvvkyAYZhP0u4");
         // $apisecretKey = urlencode("NsbSZoDY9BMA4tJdq1QQxEcR6ie5xxD4aJJxKAu7DszI1WaoKB");

@@ -23,6 +23,7 @@
 				<h5><strong>Twitter to commons</strong></h5>
 				<p><strong>Upload photos from Twitter to Wikimedia Commons.</strong></p>
 				<!-- <p>All listed accounts have made their media free licensed with an OTRS token</p> -->
+				<div class="text-center"><label for="twitter_handles text-center">You can choose from some <strong>free licensed accounts</strong> or enter a <strong>twitter handle</strong> or paste a <strong>tweet link</strong>.</label></div>
 			</div>
 		</div>
 		@if (!isset($user))
@@ -43,18 +44,19 @@
 			<div class="col-sm-4 offset-sm-4">
 				<form>
 				  	<div class="form-group">
-						<div class="text-center"><label for="twitter_handles text-center">You can choose from a free licensed account.</label></div>
+						<div class="text-center"><label for="twitter_handles text-center">Please choose appropriate method.</label></div>
 						<select class="form-control" id="twitter_handles_select" required>
-						  	<option value="" selected>Select a Twitter handle </option>
+						  	<option value="" selected>Select a free licensed Twitter handle </option>
 						  	@foreach($twitters as $twitter)
 						  	<option value="{{$twitter->handle}}">{{$twitter->name}}</option>
 						  	@endforeach
 						</select>
 					</div>
 					<div class="text-center">OR</div>
+					<div class="form-group"></div>
 					<div class="form-group">
-						<div class="text-center"><label for="twitter_handle_input">Enter a twitter handle/username</label></div>
-						<input type="text" class="form-control" name="twitter_handle_input" id="twitter_handle_input">
+						<!-- <div class="text-center"><label for="twitter_handle_input">Enter a twitter handle/username</label></div> -->
+						<input type="text" class="form-control" name="twitter_handle_input" id="twitter_handle_input" placeholder="Enter a twitter handle/username" autocomplete="on">
 					</div>
 					<!-- <div class="form-group">
 						<select class="form-control" id="tweet_number" required>
@@ -65,6 +67,15 @@
 					</div> -->
 					<div class="form-group">
 						<button type="button" class="btn btn-primary col-sm-12" id="show_tweets_button">Show Tweets</button>
+					</div>
+					<div class="text-center">OR</div>
+					<div class="form-group"></div>
+					<div class="form-group">
+						<!-- <div class="text-center"><label for="tweet_link_input">Enter a tweet link</label></div> -->
+						<input type="text" class="form-control" name="tweet_link_input" id="tweet_link_input" placeholder="Paste a tweet link">
+						<div class="form-group"></div>
+						<button type="button" class="btn btn-primary col-sm-12" id="show_tweet_button">Show Tweet Details</button>
+						
 					</div>
 				</form>
 			</div>
@@ -187,7 +198,7 @@
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 
 <script src="{{ secure_asset('js/jquery-ui.min.js') }}"></script>
-<script src="{{ secure_asset('js/twitter_commons.js?3') }}"></script>
+<script src="{{ secure_asset('js/twitter_commons.js?221119') }}"></script>
 <script type="text/javascript">
     var base_url = '{{ secure_url('/') }}';
 </script>

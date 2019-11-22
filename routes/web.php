@@ -18,6 +18,7 @@ Route::get('search', 'TwitterController@search');
 Route::get('/', 'TwitterController@twitter');
 Route::post('/', 'TwitterController@twitter');
 Route::post('initialize-tweet', 'TwitterController@initializeTweet');
+Route::post('get-tweet', 'TwitterController@getTweet');
 Route::post('upload-tweet', 'TwitterController@uploadTweet');
 Route::post('cancel-tweet', 'TwitterController@cancelTweet');
 Route::get('uploads', 'TwitterController@uploads');
