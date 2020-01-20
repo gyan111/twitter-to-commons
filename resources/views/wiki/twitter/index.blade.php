@@ -9,7 +9,7 @@
 @section('css')
 
 <link href="{{ secure_asset('css/style.css') }}" rel="stylesheet">
-<link href="{{ secure_asset('css/twitter_commons.css?1') }}" rel="stylesheet">
+<link href="{{ secure_asset('css/twitter_commons.css?2') }}" rel="stylesheet">
 
 @endsection
 
@@ -201,7 +201,7 @@
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 
 <script src="{{ secure_asset('js/jquery-ui.min.js') }}"></script>
-<script src="{{ secure_asset('js/twitter_commons.js?221119') }}"></script>
+<script src="{{ secure_asset('js/twitter_commons.js?20012020') }}"></script>
 <script type="text/javascript">
     var base_url = '{{ secure_url('/') }}';
 </script>
