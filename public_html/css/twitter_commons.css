@@ -10,11 +10,16 @@
     	margin-top: 10px;
     }
 }
-@media screen and (min-width:405px) {
+@media screen and (mix-width:480px) {
     /*.upload_tweet {
         margin-left: 2px;
     }*/
+    #tweet_div img{
+      height:300px;
+    }
+
 }
+
 #loading {
 	display: none;
 }

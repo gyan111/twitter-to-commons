@@ -85,10 +85,13 @@
 		</div>
 		<div class="row" id="tweet_div">
 			<div class="row col-sm-12 shadow-sm p-2 mb-2 bg-white rounded">
-				<div class="col-sm-4 text-center">
-					Tweet
+				<div class="col-sm-3 text-center">
+					Tweet Text
 				</div>
-				<div class="col-sm-4 text-center">
+				<div class="col-sm-2 text-center">
+					Tweet Time
+				</div>
+				<div class="col-sm-3 text-center">
 					Photos
 				</div>
 				<div class="col-sm-2 text-center">

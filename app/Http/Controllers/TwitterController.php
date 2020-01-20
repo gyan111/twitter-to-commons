@@ -59,6 +59,7 @@ class TwitterController extends Controller
                             $tweetData[$media->id_str]['image_id'] = $media->id_str;
                             $tweetData[$media->id_str]['tweet_id'] = $tweet->id_str;
                             $tweetData[$media->id_str]['tweet_text'] = $tweet->full_text;
+                            $tweetData[$media->id_str]['tweet_time'] = $tweet->created_at;
                             foreach ($tweet->entities->hashtags as $hashtag) {
                                 $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
                             }
@@ -116,6 +117,7 @@ class TwitterController extends Controller
                     $tweetData[$media->id_str]['image_id'] = $media->id_str;
                     $tweetData[$media->id_str]['tweet_id'] = $tweet->id_str;
                     $tweetData[$media->id_str]['tweet_text'] = $tweet->full_text;
+                    $tweetData[$media->id_str]['tweet_time'] = $tweet->created_at;
                     
                     foreach ($tweet->entities->hashtags as $hashtag) {
                         $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
