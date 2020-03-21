@@ -60,8 +60,20 @@ class TwitterController extends Controller
                             $tweetData[$media->id_str]['tweet_id'] = $tweet->id_str;
                             $tweetData[$media->id_str]['tweet_text'] = $tweet->full_text;
                             $tweetData[$media->id_str]['tweet_time'] = $tweet->created_at;
+                            $tweetData[$media->id_str]['media_type'] = $media->type;
                             foreach ($tweet->entities->hashtags as $hashtag) {
                                 $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
+                            }
+                        }
+                        if ($media->type == 'video') {
+                            $bitrate = 0;
+                            foreach ($media->video_info->variants as $video) {
+                                if (isset($video->bitrate)) {
+                                    if ($video->bitrate > $bitrate) {
+                                        $bitrate = $video->bitrate;
+                                        $tweetData[$media->id_str]['video_url'] = $video->url;
+                                    }
+                                }
                             }
                         }
                     }
@@ -279,8 +291,23 @@ class TwitterController extends Controller
                 ) )->tokens->edittoken;
 
 
-                $source = $media['media_url_https'];
-                $path = public_path(). '/img/temp/temp-' . $mediaId . '.jpg';
+                if ($media['type'] == 'video') {
+                    $bitrate = 0;
+                    foreach ($media['video_info']['variants'] as $video) {
+                        if (isset($video['bitrate'])) {
+                            if ($video['bitrate'] > $bitrate) {
+                                $bitrate = $video['bitrate'];
+                                $source = strtok($video['url'], '?');
+                            }
+                        }
+                    }
+                } else {
+                    $source = $media['media_url_https'];
+                }
+
+                $ext = pathinfo($source, PATHINFO_EXTENSION);
+
+                $path = public_path(). '/file/temp/temp-' . $mediaId . '.' . $ext;
                 copy($source, $path);
 
                 // $file = file_get_contents($path);
