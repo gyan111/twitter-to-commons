@@ -16,6 +16,10 @@ use App\NewAccountRequest;
 use MediaWiki\OAuthClient\ClientConfig;
 use MediaWiki\OAuthClient\Consumer;
 use MediaWiki\OAuthClient\Client;
+
+use \CloudConvert\Laravel\Facades\CloudConvert;
+use \CloudConvert\Models\Job;
+use \CloudConvert\Models\Task;
     
 class TwitterController extends Controller
 {
@@ -130,10 +134,21 @@ class TwitterController extends Controller
                     $tweetData[$media->id_str]['tweet_id'] = $tweet->id_str;
                     $tweetData[$media->id_str]['tweet_text'] = $tweet->full_text;
                     $tweetData[$media->id_str]['tweet_time'] = $tweet->created_at;
-                    
+                    $tweetData[$media->id_str]['media_type'] = $media->type;
                     foreach ($tweet->entities->hashtags as $hashtag) {
                         $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
                     }
+                    if ($media->type == 'video') {
+                            $bitrate = 0;
+                            foreach ($media->video_info->variants as $video) {
+                                if (isset($video->bitrate)) {
+                                    if ($video->bitrate > $bitrate) {
+                                        $bitrate = $video->bitrate;
+                                        $tweetData[$media->id_str]['video_url'] = $video->url;
+                                    }
+                                }
+                            }
+                        }
                 }
                 $tweetData[$media->id_str]['handle'] = $tweet->user->screen_name;
             }
@@ -297,19 +312,21 @@ class TwitterController extends Controller
                         if (isset($video['bitrate'])) {
                             if ($video['bitrate'] > $bitrate) {
                                 $bitrate = $video['bitrate'];
-                                $source = strtok($video['url'], '?');
+                                $url = strtok($video['url'], '?');
+                                $ext = 'webm';
+                                // copy($source, $path);
                             }
                         }
                     }
+                    $source = $this->convertFile($url, $mediaId);
+                    $path = public_path(). '/file/temp/temp-' . $mediaId . '.' . $ext;
                 } else {
                     $source = $media['media_url_https'];
+                    $ext = pathinfo($source, PATHINFO_EXTENSION);
+                    $path = public_path(). '/file/temp/temp-' . $mediaId . '.' . $ext;
+                    copy($source, $path);
                 }
-
-                $ext = pathinfo($source, PATHINFO_EXTENSION);
-
-                $path = public_path(). '/file/temp/temp-' . $mediaId . '.' . $ext;
-                copy($source, $path);
-
+                
                 // $file = file_get_contents($path);
                 // $file = File::get($path); 
 
@@ -340,7 +357,7 @@ class TwitterController extends Controller
 
 '. $categoryString . "\r\n" . '[[Category:Media uploaded using twitter to commons]]';
                 
-                $ext = pathinfo($media['media_url_https'], PATHINFO_EXTENSION);
+                // $ext = pathinfo($media['media_url_https'], PATHINFO_EXTENSION);
                 $fileName = str_ireplace(".".$ext,"",$request->name) . '.'. $ext;;
                 $apiParams = array(
                     'filename' => $fileName,
@@ -731,6 +748,50 @@ class TwitterController extends Controller
 
         $users = json_decode($twitterUserRequest->getBody()->getContents(), true);
         var_dump($users);
+    }
+
+    public function convertFile($sourceUrl, $mediaId) {
+        if(strpos($sourceUrl, 'ext_tw_video') !== false){
+            $uri = $sourceUrl;
+            $heightWidth = explode('/', $uri);
+            $heightWidthUri = explode('x', $heightWidth[7]);
+            $height = $heightWidthUri[0];
+            $width = $heightWidthUri[1];
+        } else{
+            $uri = $sourceUrl;
+            $heightWidth = explode('/', $uri);
+            $heightWidthUri = explode('x', $heightWidth[6]);
+            $height = $heightWidthUri[0];
+            $width = $heightWidthUri[1];
+        }
+
+        $job = CloudConvert::jobs()->create(
+            (new Job())
+            ->setTag('myjob-123')
+            ->addTask(
+                (new Task('import/url', 'import-my-file'))
+                    ->set('url', $sourceUrl)
+            )
+            ->addTask(
+                (new Task('convert', 'convert-my-file'))
+                    ->set('input', 'import-my-file')
+                    ->set('output_format', 'webm')
+                    ->set('height', $height)
+                    ->set('width', $width)
+            )
+            ->addTask(
+                (new Task('export/url', 'export-my-file'))
+                    ->set('input', 'convert-my-file')
+            )
+        );
+
+        CloudConvert::jobs()->wait($job);
+
+        foreach ($job->getExportUrls() as $file) {
+            $path = public_path(). '/file/temp/temp-' . $mediaId . '.webm';
+            copy($file->url, $path);
+            return $file->url;
+        }
     }
 
 }

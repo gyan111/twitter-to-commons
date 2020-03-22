@@ -108,13 +108,25 @@ $( document ).ready(function() {
 				return false;
 			}
 		  	$.each( data, function( key, value ) {
-		  	  	var html = '<div class="row col-sm-12 mt-1 shadow-sm p-2 mb-2 bg-white rounded tweets">'
+		  		if (value.video_url) {
+		  			var html = '<div class="row col-sm-12 mt-1 shadow-sm p-2 mb-2 bg-white rounded tweets">'
 		  	  			 +'<input id="'+ value.image_id +'" class="media_id" name="media_id" type="hidden" value="'+ value.image_id +'">'
 		  	  			 +'<input id="'+ value.image_id +'" class="tweet_id" name="tweet_id" type="hidden" value="'+ value.tweet_id +'">'
-		  	  			 +'<div class="col-sm-4">'+ value.tweet_text + '</div>'
-		  	  			 +'<div class="col-sm-4 text-center"><a data-fancybox="gallery" href="'+ value.img_url + '"><img height="100px" src= '+ value.img_url + ' class="tweet-image" title="Click to enlarge"></a></div>'
+		  	  			 +'<div class="col-sm-3">'+ value.tweet_text + '</div>'
+		  	  			 +'<div class="col-sm-2">'+ value.tweet_time + '</div>'
+		  	  			 // +'<div class="col-sm-3 text-center"><a data-fancybox="gallery" href="'+ value.img_url + '"><img height="100px" src= '+ value.img_url + ' class="tweet-image" title="Click to enlarge"></a></div>'
+		  	  			 +'<div class="col-sm-3 text-center"><video width="320px" height="240px" controls><source src="'+ value.video_url + '" type="video/mp4"><source src="'+ value.video_url + '" type="video/ogg">Your browser does not support the video tag.</video></div>'
 		  	  			 +'<div class="col-sm-2 text-center"><a target="_blank" href="https://twitter.com/' + value.handle +'/status/' + value.tweet_id + '">Tweet Link</a></div>'
 		  	  			 +'<div class="col-sm-2 text-center"><button class="btn btn-sm btn-success col-sm-5 initialize_tweet  mr-1">Upload</button><button class="btn btn-sm btn-danger col-sm-5 cancel_tweet">Cancel</button></div></div>';
+		  		} else {
+			  	  	var html = '<div class="row col-sm-12 mt-1 shadow-sm p-2 mb-2 bg-white rounded tweets">'
+			  	  			 +'<input id="'+ value.image_id +'" class="media_id" name="media_id" type="hidden" value="'+ value.image_id +'">'
+			  	  			 +'<input id="'+ value.image_id +'" class="tweet_id" name="tweet_id" type="hidden" value="'+ value.tweet_id +'">'
+			  	  			 +'<div class="col-sm-4">'+ value.tweet_text + '</div>'
+			  	  			 +'<div class="col-sm-4 text-center"><a data-fancybox="gallery" href="'+ value.img_url + '"><img height="100px" src= '+ value.img_url + ' class="tweet-image" title="Click to enlarge"></a></div>'
+			  	  			 +'<div class="col-sm-2 text-center"><a target="_blank" href="https://twitter.com/' + value.handle +'/status/' + value.tweet_id + '">Tweet Link</a></div>'
+			  	  			 +'<div class="col-sm-2 text-center"><button class="btn btn-sm btn-success col-sm-5 initialize_tweet  mr-1">Upload</button><button class="btn btn-sm btn-danger col-sm-5 cancel_tweet">Cancel</button></div></div>';
+		  	  	}
 		  	  	$('#tweet_div').append(html);
 		  	});
 		  	$('#tweet_div').show('slow');
