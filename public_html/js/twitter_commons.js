@@ -213,6 +213,7 @@ $( document ).ready(function() {
 			$('.modal-message').show();
 	  		if (typeof(data) == 'object') {
 	  			if (data.status === 'success') {
+	  				$('.video-upload-message').hide();
 	  				$('.modal-message').text(data.message);
 	  				$('.modal-message').removeClass('alert-danger');
 	  				$('.modal-message').addClass('alert-success');
