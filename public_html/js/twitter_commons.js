@@ -154,6 +154,7 @@ $( document ).ready(function() {
 			$('#name').val('');
 		  	$('#other_information').val('');
 		  	$('#permission').val('');
+		  	$('.video-upload-message').hide();
 		  	if (typeof(data) == 'object') {
 		  		if (data.status === 'success') {
 		  			// $('#name').val(data.handle + '-' + data.media_id);
@@ -171,6 +172,9 @@ $( document ).ready(function() {
 		  			$("#uploadModal").modal({show: true, backdrop: 'static', keyboard: false});
 		  			if (data.show_permission == 0) {
 		  				$('.permission-div').hide();
+		  			}
+		  			if ($('#' + media_id).parent().find("video").length > 0 ) {
+		  				$('.video-upload-message').show();
 		  			}
 		  		} else if (data.status === 'error') {
 		  			swal("Oops!", "Please login first.", "error");

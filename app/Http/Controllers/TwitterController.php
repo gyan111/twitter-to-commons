@@ -761,8 +761,8 @@ class TwitterController extends Controller
             $uri = $sourceUrl;
             $heightWidth = explode('/', $uri);
             $heightWidthUri = explode('x', $heightWidth[6]);
-            $height = $heightWidthUri[0];
-            $width = $heightWidthUri[1];
+            $width = $heightWidthUri[0];
+            $height = $heightWidthUri[1];
         }
 
         $job = CloudConvert::jobs()->create(

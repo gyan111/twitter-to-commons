@@ -129,11 +129,12 @@
 	      	</div>
 	      	<div class="modal-body">
 	      		<div class="alert alert-success modal-message" role="alert"></div>
+	      		<div class="alert alert-warning video-upload-message" role="alert"><small>You are trying to upload a video. Please try to upload small videos. (less than 1 minute). Stay on the page while uploading. Sometimes it may take more time, like 5 minutes.</small></div>
 	      		<a target="_blink" href="#" class="btn btn-success btn-lg btn-block commons-link">See image on commons.</a>
 	      		<form id="upload_tweet_form">
 		          	<div class="form-group">
-		            	<label for="name" class="col-form-label">Image Title</label>
-		            	<input type="text" class="form-control" id="name" name="name" placeholder="Enter the image title/name" required>
+		            	<label for="name" class="col-form-label">File Name</label>
+		            	<input type="text" class="form-control" id="name" name="name" placeholder="Enter the file title/name" required>
 		          	</div>
 		          	<div class="form-group">
 		            	<label for="description" class="col-form-label">Description (English) <small>Enter a good description. You may delete the default tweet text.</small></label>
