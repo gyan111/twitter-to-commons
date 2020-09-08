@@ -767,7 +767,7 @@ class TwitterController extends Controller
         
         $job = CloudConvert::jobs()->create(
             (new Job())
-            ->setTag('myjob-123')
+            ->setTag($mediaId)
             ->addTask(
                 (new Task('import/url', 'import-my-file'))
                     ->set('url', $sourceUrl)
