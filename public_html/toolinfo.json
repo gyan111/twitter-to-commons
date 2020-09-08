@@ -1,0 +1,9 @@
+{
+    "name" : "twitter-to-commons",
+    "title" : "Twitter to Commons",
+    "description" : "Upload images from twitter to Wikimedia Commons directly.",
+    "url" : "https://twitter-to-commons.toolforge.org",
+    "keywords" : "twitter, creative commons, Wikimedia Commons, bulk upload, social media",
+    "author" : "Jnanaranjan Sahu",
+    "repository" : "https://github.com/gyan111/twitter-to-commons"
+}
