@@ -20,6 +20,7 @@ class Wiki
         $conf = new ClientConfig( $endpoint );
         $conf->setRedirURL( $redir );
         $conf->setConsumer( new Consumer( $consumerKey, $consumerSecret ) );
+        $conf->setUserAgent( 'TwitterToCommons MediaWikiOAuthClient/1.0' );
 
         $this->client = new Client( $conf );
 

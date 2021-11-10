@@ -302,8 +302,8 @@ class TwitterController extends Controller
 
                 $editToken = json_decode( $client->makeOAuthCall(
                     $accessToken,
-                    env('WIKI_URL') . '/w/api.php?action=tokens&format=json'
-                ) )->tokens->edittoken;
+                    env('WIKI_URL') . '/w/api.php?action=query&meta=tokens&format=json'
+                ) )->query->tokens->csrftoken;
 
 
                 if ($media['type'] == 'video') {
@@ -363,7 +363,7 @@ class TwitterController extends Controller
                     'filename' => $fileName,
                     'action' => 'upload',
                     'file' => new \CurlFile( $path ),
-                    'comment'=> 'Uploaded image using twitter to commons',
+                    'comment'=> 'Uploaded new image using twitter to commons',
                     // 'tags' => 'Twitter to Commons',
                     'text' => $text,
                     'token' => $editToken,
@@ -673,8 +673,8 @@ class TwitterController extends Controller
 
             $editToken = json_decode( $client->makeOAuthCall(
                 $accessToken,
-                env('WIKI_URL') . '/w/api.php?action=tokens&format=json'
-            ) )->tokens->edittoken;
+                env('WIKI_URL') . '/w/api.php?action=query&meta=tokens&format=json'
+            ) )->query->tokens->csrftoken;
 
             $request->session()->put('editToken', $editToken);
 
