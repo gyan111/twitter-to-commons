@@ -163,3 +163,31 @@ body {
 .video-upload-message {
   display: none;
 }
+
+.stat-grid {
+    height: 100px;
+}
+.stat-grid h2 {
+    line-height: 1.5;
+}
+
+.grid1 {
+    background: #28a745;
+    color: #fff;
+}
+.grid2 {
+    background: #ffc107;
+    color: black;
+}
+.grid3 {
+    background: #dc3545;
+    color: #fff;
+}
+.grid4 {
+    background: #6c757d;
+    color: #fff;
+}
+.grid5 {
+    background: blue;
+    color: #fff;
+}

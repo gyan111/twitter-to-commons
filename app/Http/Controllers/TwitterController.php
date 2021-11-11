@@ -521,13 +521,14 @@ class TwitterController extends Controller
     }
     public function statistics(Request $request) {
         $uploads =  Upload::all();
-        $maxUploader = Upload::select('user_id')->selectRaw('COUNT(*) AS count')
+
+        $uploaders = Upload::select('user_id')->selectRaw('COUNT(*) AS count')
             ->where('status', 1)
             ->groupBy('user_id')
             ->orderByDesc('count')
-            ->limit(5)
-            ->get();
-    return view('wiki.twitter.statistics')->withUploads($uploads)->withMax($maxUploader);
+            ->paginate(10);
+
+    return view('wiki.twitter.statistics')->withUploads($uploads)->withUploaders($uploaders);
 
     }
     public function administration(Request $request) {
