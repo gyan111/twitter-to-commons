@@ -75,8 +75,8 @@
 						</tr>
 						@endforeach
 					</tbody>
-					{{ $uploaders->links() }}
 				</table>
+				{{ $uploaders->links() }}
 			</div>	
 		</div>
 		
