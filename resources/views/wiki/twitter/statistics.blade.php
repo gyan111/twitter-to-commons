@@ -74,9 +74,9 @@
 							<td>{{ $uploader->count }}</td>
 						</tr>
 						@endforeach
-						{{ $uploaders->links() }}
 					</tbody>
 				</table>
+				{{ $uploaders->links() }}
 			</div>	
 		</div>
 		
