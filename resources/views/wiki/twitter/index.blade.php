@@ -17,6 +17,9 @@
 
 <div class="container">
 	<section id="general-page" class="wow fadeIn">
+		<div class="alert alert-danger alert-dismissible fade show col-sm-12" role="alert" >
+		  <strong>This tool is not working as Twitter is no more providing the read API for free. I am exploring other possible ways to retrieve tweets.</strong>
+		</div>
 		<div class="row">
 			<div class="text-center col-sm-12">
 				<img src="{{ secure_asset('img/main_image.png') }}" width="150px" alt="Twitter to Commons" title="Twitter to Commons">
@@ -26,6 +29,7 @@
 				<div class="text-center"><label for="twitter_handles text-center">You can choose from some <strong>free licensed accounts</strong> or enter a <strong>twitter handle</strong> or paste a <strong>tweet link</strong>.</label></div>
 			</div>
 		</div>
+
 		@if (!isset($user))
 		<div class="alert alert-warning alert-dismissible fade show col-sm-6 offset-sm-3" role="alert" >
 		  <strong>Please Login!</strong> You must be logged in to use this app.
