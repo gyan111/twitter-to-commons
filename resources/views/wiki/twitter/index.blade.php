@@ -17,10 +17,10 @@
 
 <div class="container">
 	<section id="general-page" class="wow fadeIn">
-		<div class="alert alert-danger alert-dismissible fade show col-sm-12" role="alert" >
+		<!-- <div class="alert alert-danger alert-dismissible fade show col-sm-12" role="alert" >
 		  <strong>This tool is not working as Twitter is no more providing the read API for free. I am exploring other possible ways to retrieve tweets. </strong>
 		  <p>You may add your thoughts here (<a href="https://phabricator.wikimedia.org/T339888" alt="phabricator">T339888</a>).</p>
-		</div>
+		</div> -->
 		<div class="row">
 			<div class="text-center col-sm-12">
 				<img src="{{ secure_asset('img/main_image.png') }}" width="150px" alt="Twitter to Commons" title="Twitter to Commons">
