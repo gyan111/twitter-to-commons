@@ -388,7 +388,7 @@ class TwitterController extends Controller
                         foreach ($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities->media as $media) {
                             $categories = Twitter::where('handle',$screenName);
                             if($categories->count() > 0) {
-                                $category = Twitter::where('handle',$tweet['user']['screen_name'])->first()->category;
+                                $category = Twitter::where('handle',$screenName)->first()->category;
                                 $show_permission = 0;
                             } else {
                                 $category = '';
@@ -577,7 +577,7 @@ class TwitterController extends Controller
             }
         }
 
-        $date = Carbon::create($tweet->created_at);
+        $date = Carbon::create($tweetThred->created_at);
 
         if ($media->type == 'video') {
             $bitrate = 0;
