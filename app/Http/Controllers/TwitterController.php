@@ -169,7 +169,7 @@ class TwitterController extends Controller
             
             $client = new \GuzzleHttp\Client();
 
-            $response = $client->request('GET', 'https://twitter-v24.p.rapidapi.com/user/tweets?username=CMO_Odisha&limit=40', [
+            $response = $client->request('GET', 'https://twitter-v24.p.rapidapi.com/user/tweets?username='. $handle .'&limit=40', [
                 'headers' => [
                     'X-RapidAPI-Host' => urlencode(env('RAPIDAPI_HOST')),
                     'X-RapidAPI-Key' => urlencode(env('RAPIDAPI_KEY')),
