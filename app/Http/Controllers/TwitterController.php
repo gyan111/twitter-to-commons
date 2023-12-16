@@ -29,59 +29,83 @@ class TwitterController extends Controller
         if($request->ajax()){
             $handle = $request->handle;
 
-            $bearerToken = $request->session()->get('bearer_token');
-            if (!$bearerToken) {
-                $this->twitterToken($request);
-            }
-            $bearerToken = $request->session()->get('bearer_token');
+            // new code for rapi api
+            $client = new \GuzzleHttp\Client();
 
-            $twitterClient = new GuzzleClient(['http_errors' => false]);
-            if ($request->tweet_id != 'false') {
-                $showOldTweet = '&max_id=' . $request->tweet_id; 
-            } else {
-                $showOldTweet = '';
-            }
-            $url = 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=100&screen_name=' . $handle . '&tweet_mode=extended&exclude_replies=1&include_rts=1' . $showOldTweet;
-            try {
-                $tweetRequest = $twitterClient->get($url, [
-                    'headers' => ['Authorization' => 'Bearer '. $bearerToken],
-                ]);
-            } catch(GuzzleException $e) {
-                $response = $e->getResponse();
-            }
-            $tweets = json_decode($tweetRequest->getBody());
+            $response = $client->request('GET', 'https://twitter154.p.rapidapi.com/user/tweets?username='. $handle. '&limit=40&include_replies=false&include_pinned=false', [
+                'headers' => [
+                    'X-RapidAPI-Host' => 'twitter154.p.rapidapi.com',
+                    'X-RapidAPI-Key' => '410db0d52emshb7f38e2c48fafd1p1e62d8jsn3440a6ea4088',
+                ],
+            ]);
+
+            $tweets = json_decode($response->getBody());
+
+            // https://twitter154.p.rapidapi.com/user/tweets
+
+            // old code for twitter api
+            // **********************************
+
+            // $bearerToken = $request->session()->get('bearer_token');
+            // if (!$bearerToken) {
+            //     $this->twitterToken($request);
+            // }
+            // $bearerToken = $request->session()->get('bearer_token');
+
+            // $twitterClient = new GuzzleClient(['http_errors' => false]);
+            // if ($request->tweet_id != 'false') {
+            //     $showOldTweet = '&max_id=' . $request->tweet_id; 
+            // } else {
+            //     $showOldTweet = '';
+            // }
+            // $url = 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=100&screen_name=' . $handle . '&tweet_mode=extended&exclude_replies=1&include_rts=1' . $showOldTweet;
+            // try {
+            //     $tweetRequest = $twitterClient->get($url, [
+            //         'headers' => ['Authorization' => 'Bearer '. $bearerToken],
+            //     ]);
+            // } catch(GuzzleException $e) {
+            //     $response = $e->getResponse();
+            // }
+
+            // *********************************
+
+            // $tweets = json_decode($tweetRequest->getBody());
             // take 100 latest uplaoded or canceled tweets
             $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
 
             $tweetData = array();
-            foreach ($tweets as $tweet) {
-                if (isset($tweet->entities->media)) {
-                    foreach ($tweet->extended_entities->media as $media) {
-                        // checking if the tweet is uploaded before
-                        if (!in_array ($media->id_str , $uploadMediaIds)) {
-                            $tweetData[$media->id_str]['img_url'] = $media->media_url_https;
-                            $tweetData[$media->id_str]['image_id'] = $media->id_str;
-                            $tweetData[$media->id_str]['tweet_id'] = $tweet->id_str;
-                            $tweetData[$media->id_str]['tweet_text'] = $tweet->full_text;
-                            $tweetData[$media->id_str]['tweet_time'] = $tweet->created_at;
-                            $tweetData[$media->id_str]['media_type'] = $media->type;
-                            foreach ($tweet->entities->hashtags as $hashtag) {
-                                $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
+            foreach ($tweets as $tweetObject) {
+                foreach($tweetObject as $tweet) {
+                    // echo $tweet->tweet_id;
+                    if (isset($tweet->extended_entities->media)) {
+                        foreach ($tweet->extended_entities->media as $media) {
+                            // checking if the tweet is uploaded before
+                            if (!in_array ($media->id_str , $uploadMediaIds)) {
+                                $tweetData[$media->id_str]['img_url'] = $media->media_url_https;
+                                $tweetData[$media->id_str]['image_id'] = $media->id_str;
+                                $tweetData[$media->id_str]['tweet_id'] = $tweet->tweet_id;
+                                $tweetData[$media->id_str]['tweet_text'] = $tweet->text;
+                                $tweetData[$media->id_str]['tweet_time'] = $tweet->creation_date;
+                                $tweetData[$media->id_str]['media_type'] = $media->type;
+                                // foreach ($tweet->entities->hashtags as $hashtag) {
+                                //     $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
+                                // }
                             }
-                        }
-                        if ($media->type == 'video') {
-                            $bitrate = 0;
-                            foreach ($media->video_info->variants as $video) {
-                                if (isset($video->bitrate)) {
-                                    if ($video->bitrate > $bitrate) {
-                                        $bitrate = $video->bitrate;
-                                        $tweetData[$media->id_str]['video_url'] = $video->url;
+                            if ($media->type == 'video') {
+                                $bitrate = 0;
+                                foreach ($media->video_info->variants as $video) {
+                                    if (isset($video->bitrate)) {
+                                        if ($video->bitrate > $bitrate) {
+                                            $bitrate = $video->bitrate;
+                                            $tweetData[$media->id_str]['video_url'] = $video->url;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+                return $tweetData;
             }
             return $tweetData;
         }
