@@ -20,6 +20,8 @@ use MediaWiki\OAuthClient\Client;
 use \CloudConvert\Laravel\Facades\CloudConvert;
 use \CloudConvert\Models\Job;
 use \CloudConvert\Models\Task;
+
+use Illuminate\Support\Facades\Cookie;
     
 class TwitterController extends Controller
 {
@@ -32,12 +34,12 @@ class TwitterController extends Controller
             // new code for rapi api
             $client = new \GuzzleHttp\Client();
 
-            $response = $client->request('GET', 'https://twitter154.p.rapidapi.com/user/tweets?username='. $handle. '&limit=40&include_replies=false&include_pinned=false', [
-                'headers' => [
-                    'X-RapidAPI-Host' => 'twitter154.p.rapidapi.com',
-                    'X-RapidAPI-Key' => '410db0d52emshb7f38e2c48fafd1p1e62d8jsn3440a6ea4088',
-                ],
-            ]);
+            // $response = $client->request('GET', 'https://twitter154.p.rapidapi.com/user/tweets?username='. $handle. '&limit=40&include_replies=false&include_pinned=false', [
+            //     'headers' => [
+            //         'X-RapidAPI-Host' => 'twitter154.p.rapidapi.com',
+            //         'X-RapidAPI-Key' => '410db0d52emshb7f38e2c48fafd1p1e62d8jsn3440a6ea4088',
+            //     ],
+            // ]);
 
             $tweets = json_decode($response->getBody());
 
@@ -105,8 +107,15 @@ class TwitterController extends Controller
                         }
                     }
                 }
-                return $tweetData;
+                break;
             }
+
+            $request->session()->put('tweets', json_encode($tweetData));
+
+            $value = $request->session()->pull('tweets', 'default');
+
+            return $value;
+
             return $tweetData;
         }
 

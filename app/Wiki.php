@@ -80,6 +80,7 @@ class Wiki
         $client = $this->client;
         $client->setCallback('oob');
         // $client->setCallback( url('https://jsahu.me/wiki/authorize'));
+        
         list( $next, $token ) = $client->initiate();
         $request->session()->put('token', $token);
         return redirect($next);
