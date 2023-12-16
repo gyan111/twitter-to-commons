@@ -20,8 +20,6 @@ use MediaWiki\OAuthClient\Client;
 use \CloudConvert\Laravel\Facades\CloudConvert;
 use \CloudConvert\Models\Job;
 use \CloudConvert\Models\Task;
-
-use Illuminate\Support\Facades\Cookie;
     
 class TwitterController extends Controller
 {
@@ -31,23 +29,11 @@ class TwitterController extends Controller
         if($request->ajax()){
             $handle = $request->handle;
 
-            // new code for rapi api
-            $client = new \GuzzleHttp\Client();
+            // ********************************* //
+            // ********************************* //
 
-            // $response = $client->request('GET', 'https://twitter154.p.rapidapi.com/user/tweets?username='. $handle. '&limit=40&include_replies=false&include_pinned=false', [
-            //     'headers' => [
-            //         'X-RapidAPI-Host' => 'twitter154.p.rapidapi.com',
-            //         'X-RapidAPI-Key' => '410db0d52emshb7f38e2c48fafd1p1e62d8jsn3440a6ea4088',
-            //     ],
-            // ]);
-
-            $tweets = json_decode($response->getBody());
-
-            // https://twitter154.p.rapidapi.com/user/tweets
-
-            // old code for twitter api
-            // **********************************
-
+            // for native twitter api v1
+            
             // $bearerToken = $request->session()->get('bearer_token');
             // if (!$bearerToken) {
             //     $this->twitterToken($request);
@@ -68,30 +54,156 @@ class TwitterController extends Controller
             // } catch(GuzzleException $e) {
             //     $response = $e->getResponse();
             // }
+            // $tweets = json_decode($tweetRequest->getBody());
+
+            // take 100 latest uplaoded or canceled tweets
+            // $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
+
+            // $tweetData = array();
+
+            // foreach ($tweets as $tweet) {
+            //     if (isset($tweet->entities->media)) {
+            //         foreach ($tweet->extended_entities->media as $media) {
+            //             // checking if the tweet is uploaded before
+            //             if (!in_array ($media->id_str , $uploadMediaIds)) {
+            //                 $tweetData[$media->id_str]['img_url'] = $media->media_url_https;
+            //                 $tweetData[$media->id_str]['image_id'] = $media->id_str;
+            //                 $tweetData[$media->id_str]['tweet_id'] = $tweet->id_str;
+            //                 $tweetData[$media->id_str]['tweet_text'] = $tweet->full_text;
+            //                 $tweetData[$media->id_str]['tweet_time'] = $tweet->created_at;
+            //                 $tweetData[$media->id_str]['media_type'] = $media->type;
+            //                 foreach ($tweet->entities->hashtags as $hashtag) {
+            //                     $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
+            //                 }
+            //             }
+            //             if ($media->type == 'video') {
+            //                 $bitrate = 0;
+            //                 foreach ($media->video_info->variants as $video) {
+            //                     if (isset($video->bitrate)) {
+            //                         if ($video->bitrate > $bitrate) {
+            //                             $bitrate = $video->bitrate;
+            //                             $tweetData[$media->id_str]['video_url'] = $video->url;
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+            // return $tweetData;
+
+            // ********************************* //
+
+
+
+
+            // *********************************
+            // *********************************
+
+            // https://rapidapi.com/omarmhaimdat/api/twitter154
+
+            // $request->session()->forget('tweets');
+
+            // new code for rapi api
+            // $client = new \GuzzleHttp\Client();
+
+            // $response = $client->request('GET', 'https://twitter154.p.rapidapi.com/user/tweets?username='. $handle. '&limit=40&include_replies=false&include_pinned=false', [
+            //     'headers' => [
+            //         'X-RapidAPI-Host' => 'twitter154.p.rapidapi.com',
+            //         'X-RapidAPI-Key' => '410db0d52emshb7f38e2c48fafd1p1e62d8jsn3440a6ea4088',
+            //     ],
+            // ]);
+
+            // $tweets = json_decode($response->getBody());
+
+            // take 100 latest uplaoded or canceled tweets
+            // $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
+
+            // $tweetData = array();
+
+            // $tweetData = array();
+            // $request->session()->put('tweets', $tweets);
+            // foreach ($tweets as $tweetObject) {
+            //     foreach($tweetObject as $tweet) {
+            //         // echo $tweet->tweet_id;
+            //         if (isset($tweet->extended_entities->media)) {
+            //             foreach ($tweet->extended_entities->media as $media) {
+            //                 // checking if the tweet is uploaded before
+            //                 if (!in_array ($media->id_str , $uploadMediaIds)) {
+            //                     $tweetData[$media->id_str]['img_url'] = $media->media_url_https;
+            //                     $tweetData[$media->id_str]['image_id'] = $media->id_str;
+            //                     $tweetData[$media->id_str]['tweet_id'] = $tweet->tweet_id;
+            //                     $tweetData[$media->id_str]['tweet_text'] = $tweet->text;
+            //                     $tweetData[$media->id_str]['tweet_time'] = $tweet->creation_date;
+            //                     $tweetData[$media->id_str]['media_type'] = $media->type;
+            //                     // foreach ($tweet->entities->hashtags as $hashtag) {
+            //                     //     $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
+            //                     // }
+            //                 }
+            //                 if ($media->type == 'video') {
+            //                     $bitrate = 0;
+            //                     foreach ($media->video_info->variants as $video) {
+            //                         if (isset($video->bitrate)) {
+            //                             if ($video->bitrate > $bitrate) {
+            //                                 $bitrate = $video->bitrate;
+            //                                 $tweetData[$media->id_str]['video_url'] = $video->url;
+            //                             }
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            //     break;
+            // }
+            // return $tweetData;
 
             // *********************************
 
-            // $tweets = json_decode($tweetRequest->getBody());
+            // *********************************
+            // *********************************
+
+            // https://rapidapi.com/omarmhaimdat/api/twitter-v24
+
+            $request->session()->forget('tweets');
+            
+            $client = new \GuzzleHttp\Client();
+
+            $response = $client->request('GET', 'https://twitter-v24.p.rapidapi.com/user/tweets?username=CMO_Odisha&limit=40', [
+                'headers' => [
+                    'X-RapidAPI-Host' => urlencode(env('RAPIDAPI_HOST')),
+                    'X-RapidAPI-Key' => urlencode(env('RAPIDAPI_KEY')),
+                ],
+            ]);
+
+            $tweetsObject = json_decode($response->getBody());
+
+            $request->session()->put('tweets', $tweetsObject->data->user->result->timeline_v2->timeline->instructions[1]->entries);
+
+
+            $tweets = $tweetsObject->data->user->result->timeline_v2->timeline->instructions[1]->entries;
+
             // take 100 latest uplaoded or canceled tweets
             $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
 
             $tweetData = array();
-            foreach ($tweets as $tweetObject) {
-                foreach($tweetObject as $tweet) {
-                    // echo $tweet->tweet_id;
-                    if (isset($tweet->extended_entities->media)) {
-                        foreach ($tweet->extended_entities->media as $media) {
-                            // checking if the tweet is uploaded before
+
+            foreach($tweets as $tweet) {
+                if ($tweet->content->__typename == "TimelineTimelineModule") {
+                    if(isset($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities)) {
+                        $tweetThred = $tweet->content->items[0]->item->itemContent->tweet_results->result->legacy;
+
+                        foreach ($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities->media as $media) {
                             if (!in_array ($media->id_str , $uploadMediaIds)) {
                                 $tweetData[$media->id_str]['img_url'] = $media->media_url_https;
                                 $tweetData[$media->id_str]['image_id'] = $media->id_str;
-                                $tweetData[$media->id_str]['tweet_id'] = $tweet->tweet_id;
-                                $tweetData[$media->id_str]['tweet_text'] = $tweet->text;
-                                $tweetData[$media->id_str]['tweet_time'] = $tweet->creation_date;
+                                $tweetData[$media->id_str]['tweet_id'] = $tweetThred->id_str;
+                                $tweetData[$media->id_str]['tweet_text'] = $tweetThred->full_text;
+                                $tweetData[$media->id_str]['tweet_time'] = $tweetThred->created_at;
                                 $tweetData[$media->id_str]['media_type'] = $media->type;
-                                // foreach ($tweet->entities->hashtags as $hashtag) {
-                                //     $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
-                                // }
+                                foreach ($tweetThred->entities->hashtags as $hashtag) {
+                                    $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
+                                }
                             }
                             if ($media->type == 'video') {
                                 $bitrate = 0;
@@ -106,16 +218,38 @@ class TwitterController extends Controller
                             }
                         }
                     }
+                } else {
+                    if(isset($tweet->content->itemContent->tweet_results->result->legacy->extended_entities)) {
+                        $tweetThred = $tweet->content->itemContent->tweet_results->result->legacy;
+
+                        foreach ($tweet->content->itemContent->tweet_results->result->legacy->extended_entities->media as $media) {
+                            if (!in_array ($media->id_str , $uploadMediaIds)) {
+                                $tweetData[$media->id_str]['img_url'] = $media->media_url_https;
+                                $tweetData[$media->id_str]['image_id'] = $media->id_str;
+                                $tweetData[$media->id_str]['tweet_id'] = $tweetThred->id_str;
+                                $tweetData[$media->id_str]['tweet_text'] = $tweetThred->full_text;
+                                $tweetData[$media->id_str]['tweet_time'] = $tweetThred->created_at;
+                                $tweetData[$media->id_str]['media_type'] = $media->type;
+                                foreach ($tweetThred->entities->hashtags as $hashtag) {
+                                    $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
+                                }
+                            }
+                            if ($media->type == 'video') {
+                                $bitrate = 0;
+                                foreach ($media->video_info->variants as $video) {
+                                    if (isset($video->bitrate)) {
+                                        if ($video->bitrate > $bitrate) {
+                                            $bitrate = $video->bitrate;
+                                            $tweetData[$media->id_str]['video_url'] = $video->url;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
                 }
-                break;
             }
-
-            $request->session()->put('tweets', json_encode($tweetData));
-
-            $value = $request->session()->pull('tweets', 'default');
-
-            return $value;
-
             return $tweetData;
         }
 
@@ -239,48 +373,126 @@ class TwitterController extends Controller
         $mediaId = $request->media_id;
         $tweetId = $request->tweet_id;
 
-        $bearerToken = $request->session()->get('bearer_token');
+        $request->session()->get('tweets');
 
-        $twitterClient = new GuzzleClient(['http_errors' => false]);
+        $tweets = $request->session()->get('tweets');
 
-        $url = 'https://api.twitter.com/1.1/statuses/show/' . $tweetId . '.json?entities=1&tweet_mode=extended';
-        
-        try {
-            $tweetRequest = $twitterClient->get($url, [
-                'headers' => ['Authorization' => 'Bearer '. $bearerToken],
-            ]);
-        } catch(GuzzleException $e) {
-            $response = $e->getResponse();
-            return $response;
+        foreach ($tweets as $tweet) {
+            if ($tweet->content->__typename == "TimelineTimelineModule") {
+                if(isset($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities)) {
+                    $tweetThred = $tweet->content->items[0]->item->itemContent->tweet_results->result->legacy;
+                    $screenName = $tweet->content->items[0]->item->itemContent->tweet_results->result->core->user_results->result->legacy->screen_name;
+
+
+                    if ($tweetThred->id_str ==  $tweetId) {
+                        foreach ($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities->media as $media) {
+                            $categories = Twitter::where('handle',$screenName);
+                            if($categories->count() > 0) {
+                                $category = Twitter::where('handle',$tweet['user']['screen_name'])->first()->category;
+                                $show_permission = 0;
+                            } else {
+                                $category = '';
+                                $show_permission = 1;
+                            }
+                            if ($media->id_str == $mediaId) {
+                                $responseData['status'] = 'success';
+                                $responseData['media_id'] = $media->id_str;
+                                $responseData['handle'] = $screenName;
+                                //renmove link from the tweet text
+                                $regex = "@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@";
+                                $tweetText = preg_replace($regex, ' ', $tweetThred->full_text);
+                                $responseData['tweet_text'] = $tweetText;
+                                $responseData['tweet_id'] = $tweetId;
+                                $responseData['media_id'] = $mediaId;
+                                $responseData['static_category'] = $category;
+                                $responseData['show_permission'] = $show_permission;
+
+                                return $responseData;
+                            }   
+                        }
+                    }
+                }
+            } else {
+                if(isset($tweet->content->itemContent->tweet_results->result->legacy->extended_entities)) {
+                    $tweetThred = $tweet->content->itemContent->tweet_results->result->legacy;
+                    $screenName = $tweet->content->itemContent->tweet_results->result->core->user_results->result->legacy->screen_name;
+                    if ($tweetThred->id_str ==  $tweetId) {
+                        foreach ($tweet->content->itemContent->tweet_results->result->legacy->extended_entities->media as $media) {
+                            $categories = Twitter::where('handle',$screenName);
+                            if($categories->count() > 0) {
+                                $category = Twitter::where('handle',$screenName)->first()->category;
+                                $show_permission = 0;
+                            } else {
+                                $category = '';
+                                $show_permission = 1;
+                            }
+                            if ($media->id_str == $mediaId) {
+                                $responseData['status'] = 'success';
+                                $responseData['media_id'] = $media->id_str;
+                                $responseData['handle'] = $screenName;
+                                //renmove link from the tweet text
+                                $regex = "@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@";
+                                $tweetText = preg_replace($regex, ' ', $tweetThred->full_text);
+                                $responseData['tweet_text'] = $tweetText;
+                                $responseData['tweet_id'] = $tweetId;
+                                $responseData['media_id'] = $mediaId;
+                                $responseData['static_category'] = $category;
+                                $responseData['show_permission'] = $show_permission;
+
+                                return $responseData;
+                            }   
+                        }
+                    }
+                }
+            }
         }
+
+
+
+        // old code for calling twitter api
+
+        // $bearerToken = $request->session()->get('bearer_token');
+
+        // $twitterClient = new GuzzleClient(['http_errors' => false]);
+
+        // $url = 'https://api.twitter.com/1.1/statuses/show/' . $tweetId . '.json?entities=1&tweet_mode=extended';
+        
+        // try {
+        //     $tweetRequest = $twitterClient->get($url, [
+        //         'headers' => ['Authorization' => 'Bearer '. $bearerToken],
+        //     ]);
+        // } catch(GuzzleException $e) {
+        //     $response = $e->getResponse();
+        //     return $response;
+        // }
 
         // $tweet = json_decode($tweetRequest->getBody()); //object
-        $tweet = json_decode($tweetRequest->getBody()->getContents(), true);
-        foreach ($tweet['extended_entities']['media'] as $media) {
-            $categories = Twitter::where('handle',$tweet['user']['screen_name']);
-            if($categories->count() > 0) {
-                $category = Twitter::where('handle',$tweet['user']['screen_name'])->first()->category;
-                $show_permission = 0;
-            } else {
-                $category = '';
-                $show_permission = 1;
-            }
-            if ($media['id_str'] == $mediaId) {
-                $responseData['status'] = 'success';
-                $responseData['media_id'] = $media['id_str'];
-                $responseData['handle'] = $tweet['user']['screen_name'];
-                //renmove link from the tweet text
-                $regex = "@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@";
-                $tweetText = preg_replace($regex, ' ', $tweet['full_text']);
-                $responseData['tweet_text'] = $tweetText;
-                $responseData['tweet_id'] = $tweetId;
-                $responseData['media_id'] = $mediaId;
-                $responseData['static_category'] = $category;
-                $responseData['show_permission'] = $show_permission;
 
-                return $responseData;
-            }
-        }
+        // foreach ($tweet['extended_entities']['media'] as $media) {
+        //     $categories = Twitter::where('handle',$tweet['user']['screen_name']);
+        //     if($categories->count() > 0) {
+        //         $category = Twitter::where('handle',$tweet['user']['screen_name'])->first()->category;
+        //         $show_permission = 0;
+        //     } else {
+        //         $category = '';
+        //         $show_permission = 1;
+        //     }
+        //     if ($media['id_str'] == $mediaId) {
+        //         $responseData['status'] = 'success';
+        //         $responseData['media_id'] = $media['id_str'];
+        //         $responseData['handle'] = $tweet['user']['screen_name'];
+        //         //renmove link from the tweet text
+        //         $regex = "@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@";
+        //         $tweetText = preg_replace($regex, ' ', $tweet['full_text']);
+        //         $responseData['tweet_text'] = $tweetText;
+        //         $responseData['tweet_id'] = $tweetId;
+        //         $responseData['media_id'] = $mediaId;
+        //         $responseData['static_category'] = $category;
+        //         $responseData['show_permission'] = $show_permission;
+
+        //         return $responseData;
+        //     }
+        // }
 
     }
 
@@ -299,24 +511,26 @@ class TwitterController extends Controller
         $mediaId = $request->upload_media_id;
         $tweetId = $request->upload_tweet_id;
 
-        $bearerToken = $request->session()->get('bearer_token');
+        // $bearerToken = $request->session()->get('bearer_token');
 
-        $twitterClient = new GuzzleClient(['http_errors' => false]);
+        // $twitterClient = new GuzzleClient(['http_errors' => false]);
 
-        $url = 'https://api.twitter.com/1.1/statuses/show/' . $tweetId . '.json?entities=1&tweet_mode=extended';
+        // $url = 'https://api.twitter.com/1.1/statuses/show/' . $tweetId . '.json?entities=1&tweet_mode=extended';
         
-        try {
-            $tweetRequest = $twitterClient->get($url, [
-                'headers' => ['Authorization' => 'Bearer '. $bearerToken],
-            ]);
-        } catch(GuzzleException $e) {
-            $response = $e->getResponse();
-            return $response;
-        }
+        // try {
+        //     $tweetRequest = $twitterClient->get($url, [
+        //         'headers' => ['Authorization' => 'Bearer '. $bearerToken],
+        //     ]);
+        // } catch(GuzzleException $e) {
+        //     $response = $e->getResponse();
+        //     return $response;
+        // }
 
-        // $tweet = json_decode($tweetRequest->getBody()); //object
-        $tweet = json_decode($tweetRequest->getBody()->getContents(), true);
-        $date = Carbon::create($tweet['created_at']);
+        // // $tweet = json_decode($tweetRequest->getBody()); //object
+        // $tweet = json_decode($tweetRequest->getBody()->getContents(), true);
+
+        $tweets = $request->session()->get('tweets');
+
         $categories = json_decode($request->categories, true);
         $categoryString = '';
         foreach ($categories as $category) {
@@ -325,60 +539,86 @@ class TwitterController extends Controller
             }
         }
 
-        foreach ($tweet['extended_entities']['media'] as $media) {
+        $client = $wiki->client;
+        $accessToken = $request->session()->get('accessToken');
+        $editToken = $request->session()->get('editToken');
 
-            if ($media['id_str'] == $mediaId) {
+        $editToken = json_decode( $client->makeOAuthCall(
+            $accessToken,
+            env('WIKI_URL') . '/w/api.php?action=query&meta=tokens&format=json'
+        ) )->query->tokens->csrftoken;
 
-                $client = $wiki->client;
-                $accessToken = $request->session()->get('accessToken');
-                $editToken = $request->session()->get('editToken');
+        foreach ($tweets as $tweet) {
+            if ($tweet->content->__typename == "TimelineTimelineModule") {
+                if(isset($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities)) {
+                    $tweetThred = $tweet->content->items[0]->item->itemContent->tweet_results->result->legacy;
+                    $screenName = $tweet->content->items[0]->item->itemContent->tweet_results->result->core->user_results->result->legacy->screen_name;
 
-                $editToken = json_decode( $client->makeOAuthCall(
-                    $accessToken,
-                    env('WIKI_URL') . '/w/api.php?action=query&meta=tokens&format=json'
-                ) )->query->tokens->csrftoken;
-
-
-                if ($media['type'] == 'video') {
-                    $bitrate = 0;
-                    foreach ($media['video_info']['variants'] as $video) {
-                        if (isset($video['bitrate'])) {
-                            if ($video['bitrate'] > $bitrate) {
-                                $bitrate = $video['bitrate'];
-                                $url = strtok($video['url'], '?');
-                                $ext = 'webm';
-                                // copy($source, $path);
-                            }
+                    if($tweetThred->id_str ==  $tweetId) {
+                        foreach ($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities->media as $mediaData) {
+                            if ($mediaData->id_str == $mediaId) {
+                                $media = $mediaData;
+                            }    
                         }
                     }
-                    $source = $this->convertFile($url, $mediaId);
-                    $path = public_path(). '/file/temp/temp-' . $mediaId . '.' . $ext;
-                } else {
-                    $source = $media['media_url_https'];
-                    $ext = pathinfo($source, PATHINFO_EXTENSION);
-                    $path = public_path(). '/file/temp/temp-' . $mediaId . '.' . $ext;
-                    copy($source, $path);
                 }
-                
-                // $file = file_get_contents($path);
-                // $file = File::get($path); 
-
-                $twitterAccount = Twitter::where('handle',$tweet['user']['screen_name'])->first();
-                if ($twitterAccount) {
-                    $license = $twitterAccount->template;
-                    $author = $twitterAccount->author;
-                    $permission = $request->permission;
-                } else {
-                    $license = '{{cc-by-sa-4.0}}';
-                    $author = '[https://twitter.com/' . $tweet['user']['screen_name'] . " " . $tweet['user']['name'] . ']';
-                    $permission = $request->permission;
+            } else {
+                if(isset($tweet->content->itemContent->tweet_results->result->legacy->extended_entities)) {
+                    $tweetThred = $tweet->content->itemContent->tweet_results->result->legacy;
+                    $screenName = $tweet->content->itemContent->tweet_results->result->core->user_results->result->legacy->screen_name;
+                    if ($tweetThred->id_str ==  $tweetId) {
+                        foreach ($tweet->content->itemContent->tweet_results->result->legacy->extended_entities->media as $mediaData) {
+                            if ($mediaData->id_str == $mediaId) {
+                                $media = $mediaData;
+                            }   
+                        }
+                    }
                 }
+            }
+        }
 
-                $text = '=={{int:filedesc}}==
+        $date = Carbon::create($tweet->created_at);
+
+        if ($media->type == 'video') {
+            $bitrate = 0;
+            foreach ($media->video_info->variants as $video) {
+                if (isset($video->bitrate)) {
+                    if ($video->bitrate > $bitrate) {
+                        $bitrate = $video->bitrate;
+                        $url = strtok($video->url, '?');
+                        $ext = 'webm';
+                        // copy($source, $path);
+                    }
+                }
+            }
+            $source = $this->convertFile($url, $mediaId);
+            $path = public_path(). '/file/temp/temp-' . $mediaId . '.' . $ext;
+        } else {
+            $source = $media->media_url_https;
+            $ext = pathinfo($source, PATHINFO_EXTENSION);
+            $path = public_path(). '/file/temp/temp-' . $mediaId . '.' . $ext;
+            copy($source, $path);
+        }
+        
+        // $file = file_get_contents($path);
+        // $file = File::get($path); 
+
+        $twitterAccount = Twitter::where('handle',$screenName)->first();
+        if ($twitterAccount) {
+            $license = $twitterAccount->template;
+            $author = $twitterAccount->author;
+            $permission = $request->permission;
+        } else {
+            $license = '{{cc-by-sa-4.0}}';
+            $author = '[https://twitter.com/' . $screenName . " " . $screenName . ']';
+            $permission = $request->permission;
+        }
+
+        $text = '=={{int:filedesc}}==
 {{Information
 |description={{en|1='. $request->description .'}}
 |date='. $date->toDateTimeString() .'
-|source=[' . $media['expanded_url'] .' From Twitter account of '. $tweet['user']['name'] .']
+|source=[' . $media->expanded_url .' From Twitter account of '. $screenName .']
 |author=' . $author . '
 |permission=' . $permission . '
 |other versions=
@@ -389,87 +629,85 @@ class TwitterController extends Controller
 ' . $license . '
 
 '. $categoryString . "\r\n" . '[[Category:Media uploaded using twitter to commons]]';
-                
-                // $ext = pathinfo($media['media_url_https'], PATHINFO_EXTENSION);
-                $fileName = str_ireplace(".".$ext,"",$request->name) . '.'. $ext;;
-                $apiParams = array(
-                    'filename' => $fileName,
-                    'action' => 'upload',
-                    'file' => new \CurlFile( $path ),
-                    'comment'=> 'Uploaded new image using twitter to commons',
-                    // 'tags' => 'Twitter to Commons',
-                    'text' => $text,
-                    'token' => $editToken,
-                    'format' => 'json',
-                );
-                $user = User::where('wiki_username', $wikiUser->username)->first();
-                if (!$user or $user->count() == 0) {
-                    $user = new User;
-                    $user->name = $wikiUser->username;
-                    $user->wiki_username = $wikiUser->username;
-                    $user->email = ' ';
-                    $user->save();
-                }
-                if ($user->is_banned == 1) {
-                    $responseData['status'] = 'error';
-                    $responseData['message'] = 'You are banned from using this tool';
-                    return $responseData;
-                }
-                $upload = new Upload;
-                $upload->user_id = $user->id;
-                $upload->tweet_id = $tweet['id_str'];
-                $upload->media_id = $media['id_str'];
-                $upload->image_url_local = $path;
-                $upload->image_url_twitter = $media['media_url_https'];
-                $upload->form_data = json_encode($request->all());
-                $upload->save();
-
-                // var_dump($apiParams);die();
-                $uploadRequest = $client->makeOAuthCall(
-                    $accessToken,
-                    env('WIKI_URL') . '/w/api.php',
-                    // 'https://commons.wikimedia.org/w/api.php',
-                    true,
-                    $apiParams
-                );
-                $uploadResponse = json_decode($uploadRequest);
-
-                if ($uploadResponse->upload->result == 'Success') {
-                    $upload->success_url = $uploadResponse->upload->imageinfo->descriptionurl;
-                    $upload->status = 1;
-                    $upload->save();
-
-                    $responseData['status'] = 'success';
-                    $responseData['url'] = $uploadResponse->upload->imageinfo->descriptionurl;
-                    $responseData['message'] = 'Upload Successfull!';
-                    return $responseData;
-                } elseif ($uploadResponse->upload->result == 'Warning') {
-
-                    $upload->response_message = key((array)$uploadResponse->upload->warnings);
-                    $upload->save();
-
-                    $responseData['status'] = 'error';
-                    $responseData['error'] = key((array)$uploadResponse->upload->warnings);
-                    if ($responseData['error'] == 'badfilename') {
-                        $responseData['message'] = 'File name exists or Invalid';
-                    } elseif ($responseData['error'] == 'duplicate') {
-                        $responseData['message'] = 'The file has already been uploaded before.';
-                    } elseif ($responseData['error'] == 'exists') {
-                        $responseData['message'] = 'The name already taken. Change the name.';
-                    } elseif ($responseData['error'] == 'was-deleted') {
-                        $responseData['message'] = 'A file with this name has deleted on commons.';
-                    }  elseif ($responseData['error'] == 'duplicate-archive') {
-                        $responseData['message'] = 'This file has already deleted on commons.';
-                    }
-                    return $responseData;
-                } else {
-
-                }
-
-                var_dump($uploadResponse->upload->result);
-
-            }
+        
+        // $ext = pathinfo($media['media_url_https'], PATHINFO_EXTENSION);
+        $fileName = str_ireplace(".".$ext,"",$request->name) . '.'. $ext;;
+        $apiParams = array(
+            'filename' => $fileName,
+            'action' => 'upload',
+            'file' => new \CurlFile( $path ),
+            'comment'=> 'Uploaded new image using twitter to commons',
+            // 'tags' => 'Twitter to Commons',
+            'text' => $text,
+            'token' => $editToken,
+            'format' => 'json',
+        );
+        $user = User::where('wiki_username', $wikiUser->username)->first();
+        if (!$user or $user->count() == 0) {
+            $user = new User;
+            $user->name = $wikiUser->username;
+            $user->wiki_username = $wikiUser->username;
+            $user->email = ' ';
+            $user->save();
         }
+        if ($user->is_banned == 1) {
+            $responseData['status'] = 'error';
+            $responseData['message'] = 'You are banned from using this tool';
+            return $responseData;
+        }
+        $upload = new Upload;
+        $upload->user_id = $user->id;
+        $upload->tweet_id = $tweetThred->id_str;
+        $upload->media_id = $media->id_str;
+        $upload->image_url_local = $path;
+        $upload->image_url_twitter = $media->media_url_https;
+        $upload->form_data = json_encode($request->all());
+        $upload->save();
+
+        // var_dump($apiParams);die();
+        $uploadRequest = $client->makeOAuthCall(
+            $accessToken,
+            env('WIKI_URL') . '/w/api.php',
+            // 'https://commons.wikimedia.org/w/api.php',
+            true,
+            $apiParams
+        );
+        $uploadResponse = json_decode($uploadRequest);
+
+        if ($uploadResponse->upload->result == 'Success') {
+            $upload->success_url = $uploadResponse->upload->imageinfo->descriptionurl;
+            $upload->status = 1;
+            $upload->save();
+
+            $responseData['status'] = 'success';
+            $responseData['url'] = $uploadResponse->upload->imageinfo->descriptionurl;
+            $responseData['message'] = 'Upload Successfull!';
+            return $responseData;
+        } elseif ($uploadResponse->upload->result == 'Warning') {
+
+            $upload->response_message = key((array)$uploadResponse->upload->warnings);
+            $upload->save();
+
+            $responseData['status'] = 'error';
+            $responseData['error'] = key((array)$uploadResponse->upload->warnings);
+            if ($responseData['error'] == 'badfilename') {
+                $responseData['message'] = 'File name exists or Invalid';
+            } elseif ($responseData['error'] == 'duplicate') {
+                $responseData['message'] = 'The file has already been uploaded before.';
+            } elseif ($responseData['error'] == 'exists') {
+                $responseData['message'] = 'The name already taken. Change the name.';
+            } elseif ($responseData['error'] == 'was-deleted') {
+                $responseData['message'] = 'A file with this name has deleted on commons.';
+            }  elseif ($responseData['error'] == 'duplicate-archive') {
+                $responseData['message'] = 'This file has already deleted on commons.';
+            }
+            return $responseData;
+        } else {
+
+        }
+
+        var_dump($uploadResponse->upload->result);
+
 
     }
     public function cancelTweet(Request $request) {
