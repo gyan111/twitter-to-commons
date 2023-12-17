@@ -164,6 +164,8 @@ class TwitterController extends Controller
             // *********************************
 
             // https://rapidapi.com/omarmhaimdat/api/twitter-v24
+            
+            // $tweets = $request->session()->get('tweets');
 
             $request->session()->forget('tweets');
             
@@ -190,33 +192,35 @@ class TwitterController extends Controller
 
             foreach($tweets as $tweet) {
                 if ($tweet->content->__typename == "TimelineTimelineModule") {
-                    if(isset($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities)) {
-                        $tweetThred = $tweet->content->items[0]->item->itemContent->tweet_results->result->legacy;
-
-                        foreach ($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities->media as $media) {
-                            if (!in_array ($media->id_str , $uploadMediaIds)) {
-                                $tweetData[$media->id_str]['img_url'] = $media->media_url_https;
-                                $tweetData[$media->id_str]['image_id'] = $media->id_str;
-                                $tweetData[$media->id_str]['tweet_id'] = $tweetThred->id_str;
-                                $tweetData[$media->id_str]['tweet_text'] = $tweetThred->full_text;
-                                $tweetData[$media->id_str]['tweet_time'] = $tweetThred->created_at;
-                                $tweetData[$media->id_str]['media_type'] = $media->type;
-                                foreach ($tweetThred->entities->hashtags as $hashtag) {
-                                    $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
+                    foreach($tweet->content->items as $data) {
+                        $tweetThred = $data->item->itemContent->tweet_results->result->legacy;
+                        if(isset($data->item->itemContent->tweet_results->result->legacy->extended_entities)) {
+                           foreach ($data->item->itemContent->tweet_results->result->legacy->extended_entities->media as $media) {
+                                if (!in_array ($media->id_str , $uploadMediaIds)) {
+                                    $tweetData[$media->id_str]['img_url'] = $media->media_url_https;
+                                    $tweetData[$media->id_str]['image_id'] = $media->id_str;
+                                    $tweetData[$media->id_str]['tweet_id'] = $tweetThred->id_str;
+                                    $tweetData[$media->id_str]['tweet_text'] = $tweetThred->full_text;
+                                    $tweetData[$media->id_str]['tweet_time'] = $tweetThred->created_at;
+                                    $tweetData[$media->id_str]['media_type'] = $media->type;
+                                    foreach ($tweetThred->entities->hashtags as $hashtag) {
+                                        $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
+                                    }
                                 }
-                            }
-                            if ($media->type == 'video') {
-                                $bitrate = 0;
-                                foreach ($media->video_info->variants as $video) {
-                                    if (isset($video->bitrate)) {
-                                        if ($video->bitrate > $bitrate) {
-                                            $bitrate = $video->bitrate;
-                                            $tweetData[$media->id_str]['video_url'] = $video->url;
+                                if ($media->type == 'video') {
+                                    $bitrate = 0;
+                                    foreach ($media->video_info->variants as $video) {
+                                        if (isset($video->bitrate)) {
+                                            if ($video->bitrate > $bitrate) {
+                                                $bitrate = $video->bitrate;
+                                                $tweetData[$media->id_str]['video_url'] = $video->url;
+                                            }
                                         }
                                     }
                                 }
-                            }
+                            } 
                         }
+
                     }
                 } else {
                     if(isset($tweet->content->itemContent->tweet_results->result->legacy->extended_entities)) {
@@ -379,36 +383,37 @@ class TwitterController extends Controller
 
         foreach ($tweets as $tweet) {
             if ($tweet->content->__typename == "TimelineTimelineModule") {
-                if(isset($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities)) {
-                    $tweetThred = $tweet->content->items[0]->item->itemContent->tweet_results->result->legacy;
-                    $screenName = $tweet->content->items[0]->item->itemContent->tweet_results->result->core->user_results->result->legacy->screen_name;
+                foreach($tweet->content->items as $data) {
+                    $tweetThred = $data->item->itemContent->tweet_results->result->legacy;
+                    $screenName = $data->item->itemContent->tweet_results->result->core->user_results->result->legacy->screen_name;
+                    if(isset($data->item->itemContent->tweet_results->result->legacy->extended_entities)) {
 
+                        if ($tweetThred->id_str ==  $tweetId) {
+                            foreach ($data->item->itemContent->tweet_results->result->legacy->extended_entities->media as $media) {
+                                $categories = Twitter::where('handle',$screenName);
+                                if($categories->count() > 0) {
+                                    $category = Twitter::where('handle',$screenName)->first()->category;
+                                    $show_permission = 0;
+                                } else {
+                                    $category = '';
+                                    $show_permission = 1;
+                                }
+                                if ($media->id_str == $mediaId) {
+                                    $responseData['status'] = 'success';
+                                    $responseData['media_id'] = $media->id_str;
+                                    $responseData['handle'] = $screenName;
+                                    //renmove link from the tweet text
+                                    $regex = "@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@";
+                                    $tweetText = preg_replace($regex, ' ', $tweetThred->full_text);
+                                    $responseData['tweet_text'] = $tweetText;
+                                    $responseData['tweet_id'] = $tweetId;
+                                    $responseData['media_id'] = $mediaId;
+                                    $responseData['static_category'] = $category;
+                                    $responseData['show_permission'] = $show_permission;
 
-                    if ($tweetThred->id_str ==  $tweetId) {
-                        foreach ($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities->media as $media) {
-                            $categories = Twitter::where('handle',$screenName);
-                            if($categories->count() > 0) {
-                                $category = Twitter::where('handle',$screenName)->first()->category;
-                                $show_permission = 0;
-                            } else {
-                                $category = '';
-                                $show_permission = 1;
+                                    return $responseData;
+                                }   
                             }
-                            if ($media->id_str == $mediaId) {
-                                $responseData['status'] = 'success';
-                                $responseData['media_id'] = $media->id_str;
-                                $responseData['handle'] = $screenName;
-                                //renmove link from the tweet text
-                                $regex = "@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@";
-                                $tweetText = preg_replace($regex, ' ', $tweetThred->full_text);
-                                $responseData['tweet_text'] = $tweetText;
-                                $responseData['tweet_id'] = $tweetId;
-                                $responseData['media_id'] = $mediaId;
-                                $responseData['static_category'] = $category;
-                                $responseData['show_permission'] = $show_permission;
-
-                                return $responseData;
-                            }   
                         }
                     }
                 }
@@ -550,15 +555,18 @@ class TwitterController extends Controller
 
         foreach ($tweets as $tweet) {
             if ($tweet->content->__typename == "TimelineTimelineModule") {
-                if(isset($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities)) {
-                    $tweetThred = $tweet->content->items[0]->item->itemContent->tweet_results->result->legacy;
-                    $screenName = $tweet->content->items[0]->item->itemContent->tweet_results->result->core->user_results->result->legacy->screen_name;
+                foreach($tweet->content->items as $data) {
 
-                    if($tweetThred->id_str ==  $tweetId) {
-                        foreach ($tweet->content->items[0]->item->itemContent->tweet_results->result->legacy->extended_entities->media as $mediaData) {
-                            if ($mediaData->id_str == $mediaId) {
-                                $media = $mediaData;
-                            }    
+                    $tweetThred = $data->item->itemContent->tweet_results->result->legacy;
+                    $screenName = $data->item->itemContent->tweet_results->result->core->user_results->result->legacy->screen_name;
+                    if(isset($data->item->itemContent->tweet_results->result->legacy->extended_entities)) {
+
+                        if($tweetThred->id_str ==  $tweetId) {
+                            foreach ($data->item->itemContent->tweet_results->result->legacy->extended_entities->media as $mediaData) {
+                                if ($mediaData->id_str == $mediaId) {
+                                    $media = $mediaData;
+                                }    
+                            }
                         }
                     }
                 }
