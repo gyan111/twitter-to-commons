@@ -60,7 +60,7 @@ class TwitterController extends Controller
             // $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
 
             // $tweetData = array();
-
+            // all the data obtained in json format is being traversed according to the hierarchy
             // foreach ($tweets as $tweet) {
             //     if (isset($tweet->entities->media)) {
             //         foreach ($tweet->extended_entities->media as $media) {
@@ -187,9 +187,8 @@ class TwitterController extends Controller
 
             // take 100 latest uplaoded or canceled tweets
             $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
-
+            // all the data obtained in json format is being traversed according to the hierarchy
             $tweetData = array();
-
             foreach($tweets as $tweet) {
                 if ($tweet->content->__typename == "TimelineTimelineModule") {
                     foreach($tweet->content->items as $data) {
@@ -380,7 +379,7 @@ class TwitterController extends Controller
         $request->session()->get('tweets');
 
         $tweets = $request->session()->get('tweets');
-
+        
         foreach ($tweets as $tweet) {
             if ($tweet->content->__typename == "TimelineTimelineModule") {
                 foreach($tweet->content->items as $data) {
