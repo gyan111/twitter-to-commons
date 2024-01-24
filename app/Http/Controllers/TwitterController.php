@@ -300,12 +300,12 @@ class TwitterController extends Controller
 
             $client = new \GuzzleHttp\Client();
 
-            $response = $client->request('GET', 'https://twitter241.p.rapidapi.com/tweet?pid='.$tweetId, [
-                'headers' => [
-                    'X-RapidAPI-Host' =>  urlencode(env('RAPID_API_HOST_1'));
-                    'X-RapidAPI-Key' => urlencode(env('RAPID_API_KEY_1'));,
-                ],
-            ]);
+            // $response = $client->request('GET', 'https://twitter241.p.rapidapi.com/tweet?pid='.$tweetId, [
+            //     'headers' => [
+            //         'X-RapidAPI-Host' =>  urlencode(env('RAPID_API_HOST_1'));
+            //         'X-RapidAPI-Key' => urlencode(env('RAPID_API_KEY_1'));,
+            //     ],
+            // ]);
 
             $tweet = $request->session()->get('tweet');
 
