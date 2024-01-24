@@ -36,7 +36,7 @@
 							<th>Handle</th>
 							<th>Name</th>
 							<th>Template</th>
-							<th>Categoty</th>
+							<th>Category</th>
 							<th>Author</th>
 						</tr>
 					</thead>
