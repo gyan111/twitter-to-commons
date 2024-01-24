@@ -60,7 +60,7 @@ class TwitterController extends Controller
             // $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
 
             // $tweetData = array();
-
+            // all the data obtained in json format is being traversed according to the hierarchy
             // foreach ($tweets as $tweet) {
             //     if (isset($tweet->entities->media)) {
             //         foreach ($tweet->extended_entities->media as $media) {
@@ -187,9 +187,8 @@ class TwitterController extends Controller
 
             // take 100 latest uplaoded or canceled tweets
             $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
-
+            // all the data obtained in json format is being traversed according to the hierarchy
             $tweetData = array();
-
             foreach($tweets as $tweet) {
                 if ($tweet->content->__typename == "TimelineTimelineModule") {
                     foreach($tweet->content->items as $data) {
@@ -297,16 +296,16 @@ class TwitterController extends Controller
             // }
             // $tweet = json_decode($tweetRequest->getBody());
 
-            // $tweetData = array();
+            $tweetData = array();
 
-            // $client = new \GuzzleHttp\Client();
+            $client = new \GuzzleHttp\Client();
 
-            // $response = $client->request('GET', 'https://twitter241.p.rapidapi.com/tweet?pid='.$tweetId, [
-            //     'headers' => [
-            //         'X-RapidAPI-Host' => 'twitter241.p.rapidapi.com',
-            //         'X-RapidAPI-Key' => '410db0d52emshb7f38e2c48fafd1p1e62d8jsn3440a6ea4088',
-            //     ],
-            // ]);
+            $response = $client->request('GET', 'https://twitter241.p.rapidapi.com/tweet?pid='.$tweetId, [
+                'headers' => [
+                    'X-RapidAPI-Host' =>  urlencode(env('RAPID_API_HOST_1'));
+                    'X-RapidAPI-Key' => urlencode(env('RAPID_API_KEY_1'));,
+                ],
+            ]);
 
             $tweet = $request->session()->get('tweet');
 
@@ -426,7 +425,7 @@ class TwitterController extends Controller
         $request->session()->get('tweets');
 
         $tweets = $request->session()->get('tweets');
-
+        
         foreach ($tweets as $tweet) {
             if ($tweet->content->__typename == "TimelineTimelineModule") {
                 foreach($tweet->content->items as $data) {
