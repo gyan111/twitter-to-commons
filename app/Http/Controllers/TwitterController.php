@@ -169,7 +169,7 @@ class TwitterController extends Controller
 
             // return $tweets;
 
-            $request->session()->forget('tweets');
+            $request->session()->forget('tweet');
             // $request->session()->forget('tweetsTEMP');
             
             $client = new \GuzzleHttp\Client();
@@ -266,7 +266,7 @@ class TwitterController extends Controller
                     }
                 }
             }
-            $request->session()->put('tweets', $tweetData);
+            $request->session()->put('tweet', $tweetData);
 
             return $tweetData;
         }
@@ -448,7 +448,7 @@ class TwitterController extends Controller
         $tweetId = $request->tweet_id;
 
         $media = $request->session()->forget('media');
-        $tweets = $request->session()->get('tweets');
+        $tweets = $request->session()->get('tweet');
 
         foreach ($tweets as $tweet) {
             if($tweet['media_id'] == $mediaId) {
