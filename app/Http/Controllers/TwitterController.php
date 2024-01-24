@@ -325,10 +325,10 @@ class TwitterController extends Controller
             ]);
 
             $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
-
-            $request->session()->forget('tweets');
             
-            $tweets = json_decode($response->getBody());
+            $request->session()->forget('tweet');
+
+            $tweet = json_decode($response->getBody());
 
             $tweetData = array();
 
@@ -364,7 +364,7 @@ class TwitterController extends Controller
                 }
             }
             
-            $request->session()->put('tweets', $tweetData);
+            $request->session()->put('tweet', $tweetData);
 
             return $tweetData;
             // if (isset($tweet->entities->media)) {
