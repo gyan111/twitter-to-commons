@@ -56,7 +56,7 @@ $( document ).ready(function() {
 		  	  			 +'<div class="col-sm-3 text-center"><video width="320px" height="240px" controls><source src="'+ value.video_url + '" type="video/mp4"><source src="'+ value.video_url + '" type="video/ogg">Your browser does not support the video tag.</video></div>'
 		  	  			 +'<div class="col-sm-2 text-center"><a target="_blank" href="https://twitter.com/' + handle +'/status/' + value.tweet_id + '">Tweet Link</a></div>'
 		  	  			 +'<div class="col-sm-2 text-center"><button class="btn btn-sm btn-success col-sm-5 initialize_tweet  mr-1">Upload</button><button class="btn btn-sm btn-danger col-sm-5 cancel_tweet">Cancel</button></div></div>';
-		  		} else {
+		  		} else if(value.img_url) {
 		  			var html = '<div class="row col-sm-12 mt-1 shadow-sm p-2 mb-2 bg-white rounded tweets">'
 		  	  			 +'<input id="'+ value.media_id +'" class="media_id" name="media_id" type="hidden" value="'+ value.media_id +'">'
 		  	  			 +'<input id="'+ value.tweet_id +'" class="tweet_id" name="tweet_id" type="hidden" value="'+ value.tweet_id +'">'
@@ -69,13 +69,16 @@ $( document ).ready(function() {
 		  		if (key = 'cursor') {
 		  			$('#cursor').val(value);
 		  		} else {
-		  			
+
 		  		}
 		  	  $('#tweet_div').append(html);
 		  	});
 		  	$('#tweet_div').show('slow');
-			$('#load_more_tweets').show('slow');
-			scroll();
+		  	if ($('#load_more_tweets').is(":hidden")) {
+					scroll();
+				}
+				$('#load_more_tweets').show('slow');
+				// if($('#load_more_tweets').hasClass('load_more_tweets')) {
 		  }
 		}).fail(function (jqXHR, textStatus) {
 		    swal("Something went wrong!", " Please reload the page or contact the developer.", "error");
