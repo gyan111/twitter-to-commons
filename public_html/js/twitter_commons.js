@@ -34,6 +34,10 @@ $( document ).ready(function() {
 		
 		$('#loading').show();
 		$('.no_tweets').hide();
+		$('#tweet_div').show('slow');
+		if ($('#load_more_tweets').is(":hidden")) {
+			scroll();
+		}
 		$.ajax({
 		  type:"POST",
 		  data: { handle: handle, cursor: cursor}
@@ -73,10 +77,6 @@ $( document ).ready(function() {
 		  		}
 		  	  $('#tweet_div').append(html);
 		  	});
-		  	$('#tweet_div').show('slow');
-		  	if ($('#load_more_tweets').is(":hidden")) {
-					scroll();
-				}
 				$('#load_more_tweets').show('slow');
 				// if($('#load_more_tweets').hasClass('load_more_tweets')) {
 		  }

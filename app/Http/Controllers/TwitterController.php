@@ -98,30 +98,30 @@ class TwitterController extends Controller
 
             // https://rapidapi.com/omarmhaimdat/api/twitter-v24
             
-            $request->session()->forget('tweet');
+            // $request->session()->forget('tweet');
             
-            $client = new \GuzzleHttp\Client();
+            // $client = new \GuzzleHttp\Client();
 
-            if ($request->cursor) {
-                $link = 'https://twitter-v24.p.rapidapi.com/user/tweets?username='. $handle .'&limit=40&cursor=' .$request->cursor;
+            // if ($request->cursor) {
+            //     $link = 'https://twitter-v24.p.rapidapi.com/user/tweets?username='. $handle .'&limit=40&cursor=' .$request->cursor;
 
-            } else {
-                $link = 'https://twitter-v24.p.rapidapi.com/user/tweets?username='. $handle .'&limit=40';
-            }
+            // } else {
+            //     $link = 'https://twitter-v24.p.rapidapi.com/user/tweets?username='. $handle .'&limit=40';
+            // }
 
-            $response = $client->request('GET', $link, [
-                'headers' => [
-                    'X-RapidAPI-Host' => urlencode(env('RAPIDAPI_HOST')),
-                    'X-RapidAPI-Key' => urlencode(env('RAPIDAPI_KEY')),
-                ],
-            ]);
+            // $response = $client->request('GET', $link, [
+            //     'headers' => [
+            //         'X-RapidAPI-Host' => urlencode(env('RAPIDAPI_HOST')),
+            //         'X-RapidAPI-Key' => urlencode(env('RAPIDAPI_KEY')),
+            //     ],
+            // ]);
 
-            $tweetsObject = json_decode($response->getBody());
+            // $tweetsObject = json_decode($response->getBody());
 
-            $tweets = $tweetsObject->data->user->result->timeline_v2->timeline->instructions[1]->entries;
+            // $tweets = $tweetsObject->data->user->result->timeline_v2->timeline->instructions[1]->entries;
 
             // $request->session()->put('tweetsTEMP', $tweets);
-            // $tweets = $request->session()->get('tweetsTEMP');
+            $tweets = $request->session()->get('tweetsTEMP');
 
             // take 1000 latest uplaoded or canceled tweets
             $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
