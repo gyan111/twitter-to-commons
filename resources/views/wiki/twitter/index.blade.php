@@ -117,6 +117,7 @@
 		</div>
 		<div class="row mt-6">
 			<div class="col-4 mx-auto">
+				<input type="hidden" id="cursor" name="cursor">
 				<button class="btn btn-primary btn-block btn-primary load_more_tweets" id="load_more_tweets">Show older tweets</button>
 			</div>
 		</div>

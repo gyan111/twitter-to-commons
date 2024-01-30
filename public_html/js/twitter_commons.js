@@ -26,9 +26,9 @@ $( document ).ready(function() {
 			}
 		}
 		if($(this).hasClass('load_more_tweets')) {
-			var tweetId = $('.media_id').last().val();
+			var cursor = $('#cursor').val();
 		} else {
-			var tweetId = false;
+			var cursor = false;
 			$('.tweets').remove();
 		}
 		
@@ -36,7 +36,7 @@ $( document ).ready(function() {
 		$('.no_tweets').hide();
 		$.ajax({
 		  type:"POST",
-		  data: { handle: handle, tweet_id: tweetId}
+		  data: { handle: handle, cursor: cursor}
 		}).done(function(data) {
 		  if (typeof(data) == 'object') {
 			$('#loading').hide();
@@ -66,8 +66,12 @@ $( document ).ready(function() {
 		  	  			 +'<div class="col-sm-2 text-center"><a target="_blank" href="https://twitter.com/' + handle +'/status/' + value.tweet_id + '">Tweet Link</a></div>'
 		  	  			 +'<div class="col-sm-2 text-center"><button class="btn btn-sm btn-success col-sm-5 initialize_tweet  mr-1">Upload</button><button class="btn btn-sm btn-danger col-sm-5 cancel_tweet">Cancel</button></div></div>';
 		  		}
-		  	  	
-		  	  	$('#tweet_div').append(html);
+		  		if (key = 'cursor') {
+		  			$('#cursor').val(value);
+		  		} else {
+		  			
+		  		}
+		  	  $('#tweet_div').append(html);
 		  	});
 		  	$('#tweet_div').show('slow');
 			$('#load_more_tweets').show('slow');

@@ -98,15 +98,18 @@ class TwitterController extends Controller
 
             // https://rapidapi.com/omarmhaimdat/api/twitter-v24
             
-            // $tweets = $request->session()->get('tweetsTEMP');
-
-            // return $tweets;
-
             $request->session()->forget('tweet');
             
             $client = new \GuzzleHttp\Client();
 
-            $response = $client->request('GET', 'https://twitter-v24.p.rapidapi.com/user/tweets?username='. $handle .'&limit=40', [
+            if ($request->cursor) {
+                $link = 'https://twitter-v24.p.rapidapi.com/user/tweets?username='. $handle .'&limit=40&cursor=' .$request->cursor;
+
+            } else {
+                $link = 'https://twitter-v24.p.rapidapi.com/user/tweets?username='. $handle .'&limit=40';
+            }
+
+            $response = $client->request('GET', $link, [
                 'headers' => [
                     'X-RapidAPI-Host' => urlencode(env('RAPIDAPI_HOST')),
                     'X-RapidAPI-Key' => urlencode(env('RAPIDAPI_KEY')),
@@ -115,17 +118,17 @@ class TwitterController extends Controller
 
             $tweetsObject = json_decode($response->getBody());
 
-            $request->session()->put('tweetsTEMP', $tweetsObject->data->user->result->timeline_v2->timeline->instructions[1]->entries);
-
             $tweets = $tweetsObject->data->user->result->timeline_v2->timeline->instructions[1]->entries;
 
+            // $request->session()->put('tweetsTEMP', $tweets);
+            // $tweets = $request->session()->get('tweetsTEMP');
 
             // take 1000 latest uplaoded or canceled tweets
             $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
             // all the data obtained in json format is being traversed according to the hierarchy
             $tweetData = array();
             foreach($tweets as $tweet) {
-                if ($tweet->content->__typename == "TimelineTimelineModule") {
+                if ($tweet->content->entryType == "TimelineTimelineModule") {
                     foreach($tweet->content->items as $data) {
                         $tweetThred = $data->item->itemContent->tweet_results->result->legacy;
                         $screenName = $data->item->itemContent->tweet_results->result->core->user_results->result->legacy->screen_name;
@@ -160,7 +163,7 @@ class TwitterController extends Controller
                         }
 
                     }
-                } else {
+                } else if($tweet->content->entryType == "TimelineTimelineItem") {
                     if(isset($tweet->content->itemContent->tweet_results->result->legacy->extended_entities)) {
                         $tweetThred = $tweet->content->itemContent->tweet_results->result->legacy;
                         $screenName = $tweet->content->itemContent->tweet_results->result->core->user_results->result->legacy->screen_name;
@@ -194,6 +197,11 @@ class TwitterController extends Controller
                             }
                         }
 
+                    }
+                } else if ($tweet->content->entryType == "TimelineTimelineCursor") {
+                    if ($tweet->content->cursorType == "Bottom") {
+                        $cursor = $tweet->entryId;
+                        $tweetData['cursor'] = $cursor;
                     }
                 }
             }
