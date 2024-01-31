@@ -27,6 +27,18 @@ class TwitterController extends Controller
     public function twitter(Request $request)
     {
         if($request->ajax()){
+
+            // allow only logged in users to check tweets
+            
+            // $wiki = new Wiki;
+            // $user = $wiki->checkAuth($request);
+
+            // if (!$user) {
+            //     $responseData['status'] = 'error';
+            //     $responseData['message'] = 'Invalid User';
+            //     return $responseData;
+            // }
+
             $handle = $request->handle;
 
 
@@ -233,6 +245,18 @@ class TwitterController extends Controller
     public function getTweet(Request $request)
     {
         if($request->ajax()){
+
+            // allow only logged in users to check tweets
+
+            // $wiki = new Wiki;
+            // $user = $wiki->checkAuth($request);
+
+            // if (!$user) {
+            //     $responseData['status'] = 'error';
+            //     $responseData['message'] = 'Invalid User';
+            //     return $responseData;
+            // }
+
             $tweetIdLink = $request->tweet_id;
 
             $tweetId = trim(explode('/', trim(substr($tweetIdLink, strpos($tweetIdLink, 'twitter.com') + 12)))[2]);
@@ -253,8 +277,6 @@ class TwitterController extends Controller
             $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
             
             $tweet = json_decode($response->getBody());
-
-            return $tweet;
 
             $tweetData = array();
 

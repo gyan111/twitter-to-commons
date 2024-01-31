@@ -43,6 +43,13 @@ $( document ).ready(function() {
 		  data: { handle: handle, cursor: cursor}
 		}).done(function(data) {
 		  if (typeof(data) == 'object') {
+		  if (data.hasOwnProperty('status')) {
+			  if (data.status === 'error') {
+			  	$('#loading').hide();
+	  			swal("Oops!", "Please login first.", "error");
+					return false;
+	  		}
+	  	}
 			$('#loading').hide();
 			if ($.isEmptyObject(data)) {
 				$('.no_tweets').text('No tweeet with images is available. Please check the details.');
@@ -108,6 +115,13 @@ $( document ).ready(function() {
 		  data: {tweet_id: tweetId}
 		}).done(function(data) {
 		  if (typeof(data) == 'object') {
+		  if (data.hasOwnProperty('status')) {
+			  if (data.status === 'error') {
+			  	$('#loading').hide();
+	  			swal("Oops!", "Please login first.", "error");
+					return false;
+	  		}
+	  	}
 			$('#loading').hide();
 			if ($.isEmptyObject(data)) {
 				$('.no_tweets').text('This tweet may not have any images.Please check the link');
@@ -185,7 +199,7 @@ $( document ).ready(function() {
 		  			}
 		  		} else if (data.status === 'error') {
 		  			swal("Oops!", "Please login first.", "error");
-					return false;
+						return false;
 		  		} else if (data.status === 'banned') {
 		  			swal("Oops!", "You are banned from using this tool.", "error");
 					return false;
