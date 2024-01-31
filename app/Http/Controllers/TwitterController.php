@@ -118,7 +118,12 @@ class TwitterController extends Controller
 
             $tweetsObject = json_decode($response->getBody());
 
-            $tweets = $tweetsObject->data->user->result->timeline_v2->timeline->instructions[1]->entries;
+            if (property_exists($tweetsObject->data->user->result->timeline_v2->timeline->instructions[0], 'entries')) {
+                $tweets = $tweetsObject->data->user->result->timeline_v2->timeline->instructions[0]->entries;
+            } else if (property_exists($tweetsObject->data->user->result->timeline_v2->timeline->instructions[1], 'entries')) {
+                $tweets = $tweetsObject->data->user->result->timeline_v2->timeline->instructions[1]->entries;
+            }
+
 
             // $request->session()->put('tweetsTEMP', $tweets);
             // $tweets = $request->session()->get('tweetsTEMP');
@@ -200,7 +205,7 @@ class TwitterController extends Controller
                     }
                 } else if ($tweet->content->entryType == "TimelineTimelineCursor") {
                     if ($tweet->content->cursorType == "Bottom") {
-                        $cursor = $tweet->entryId;
+                        $cursor = $tweet->content->value;
                         $tweetData['cursor'] = $cursor;
                     }
                 }
