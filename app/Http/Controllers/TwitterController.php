@@ -133,6 +133,9 @@ class TwitterController extends Controller
                 if (!$userId) {
                     return ['error' => 'User not found'];
                 }
+                
+                // Wait 1 second before next API call to respect rate limit (1 req/sec)
+                sleep(1);
             }
 
             // Get user media using user ID
