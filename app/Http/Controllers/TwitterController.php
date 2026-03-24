@@ -159,11 +159,20 @@ class TwitterController extends Controller
             // Parse the response structure from /user-media endpoint
             if (isset($tweetsObject->result->timeline->instructions)) {
                 foreach ($tweetsObject->result->timeline->instructions as $instruction) {
-                    if (isset($instruction->entries)) {
+                    if ($instruction->type === 'TimelineAddEntries' && isset($instruction->entries)) {
                         $tweets = $instruction->entries;
                         break;
                     }
                 }
+            }
+            
+            // If no tweets found, return early with userId/handle for debugging
+            if (empty($tweets)) {
+                return [
+                    'userId' => $userId,
+                    'handle' => $handle,
+                    'message' => 'No media tweets found for this user'
+                ];
             }
 
             // Get already uploaded/canceled media IDs to filter them out
