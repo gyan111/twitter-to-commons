@@ -505,6 +505,12 @@ class TwitterController extends Controller
 
         $date = Carbon::create($media['created_at']);
 
+        // Ensure temp directory exists
+        $tempDir = public_path() . '/file/temp';
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
         if ($media['type'] == 'video') {
             $bitrate = 0;
             foreach ($media['video_info']->variants as $video) {
