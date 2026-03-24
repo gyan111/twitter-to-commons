@@ -8,8 +8,8 @@
 
 @section('css')
 
-<link href="{{ asset('css/style.css') }}" rel="stylesheet">
-<link href="{{ asset('css/twitter_commons.css') }}" rel="stylesheet">
+<link href="{{ secure_asset('css/style.css') }}" rel="stylesheet">
+<link href="{{ secure_asset('css/twitter_commons.css') }}" rel="stylesheet">
 
 @endsection
 
@@ -94,9 +94,9 @@
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 
-<script src="{{ asset('js/jquery-ui.min.js') }}"></script>
-<script src="{{ asset('js/twitter_commons.js') }}"></script>
+<script src="{{ secure_asset('js/jquery-ui.min.js') }}"></script>
+<script src="{{ secure_asset('js/twitter_commons.js') }}"></script>
 <script type="text/javascript">
-    var base_url = '{{ url('/') }}';
+    var base_url = '{{ secure_url('/') }}';
 </script>
 @endsection

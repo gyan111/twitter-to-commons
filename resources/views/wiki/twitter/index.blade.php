@@ -8,8 +8,8 @@
 
 @section('css')
 
-<link href="{{ asset('css/style.css') }}" rel="stylesheet">
-<link href="{{ asset('css/twitter_commons.css?3') }}" rel="stylesheet">
+<link href="{{ secure_asset('css/style.css') }}" rel="stylesheet">
+<link href="{{ secure_asset('css/twitter_commons.css?3') }}" rel="stylesheet">
 
 @endsection
 
@@ -23,7 +23,7 @@
 		</div> -->
 		<div class="row">
 			<div class="text-center col-sm-12">
-				<img src="{{ asset('img/main_image.png') }}" width="150px" alt="X (Twitter) to Commons" title="X (Twitter) to Commons">
+				<img src="{{ secure_asset('img/main_image.png') }}" width="150px" alt="X (Twitter) to Commons" title="X (Twitter) to Commons">
 				<h5><strong>X (Twitter) to Commons</strong></h5>
 				<p><strong>Upload photos from X (Twitter) to Wikimedia Commons.</strong></p>
 				<!-- <p>All listed accounts have made their media free licensed with an OTRS token</p> -->
@@ -112,7 +112,7 @@
 		</div>
 		<div class="row mt-6 mb-6" id="loading">
 			<div class="col-sm-12 text-center">
-				<img src="{{ asset('img/loading.gif') }}">
+				<img src="{{ secure_asset('img/loading.gif') }}">
 			</div>
 		</div>
 		<div class="row mt-6">
@@ -207,9 +207,9 @@
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 
-<script src="{{ asset('js/jquery-ui.min.js') }}"></script>
-<script src="{{ asset('js/twitter_commons.js?31032020') }}"></script>
+<script src="{{ secure_asset('js/jquery-ui.min.js') }}"></script>
+<script src="{{ secure_asset('js/twitter_commons.js?31032020') }}"></script>
 <script type="text/javascript">
-    var base_url = '{{ url('/') }}';
+    var base_url = '{{ secure_url('/') }}';
 </script>
 @endsection

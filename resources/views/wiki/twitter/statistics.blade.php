@@ -4,7 +4,7 @@
 
 @section('css')
 
-<link href="{{ asset('css/twitter_commons.css') }}" rel="stylesheet">
+<link href="{{ secure_asset('css/twitter_commons.css') }}" rel="stylesheet">
 
 @endsection
 
