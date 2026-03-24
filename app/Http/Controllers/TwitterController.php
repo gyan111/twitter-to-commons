@@ -140,10 +140,12 @@ class TwitterController extends Controller
             sleep(1);
 
             // Get user media using user ID
-            if ($request->cursor) {
-                $link = 'https://' . env('RAPIDAPI_HOST') . '/user-media?user=' . $userId . '&cursor=' . $request->cursor;
+            $link = 'https://' . env('RAPIDAPI_HOST') . '/user-media?user=' . $userId;
+            if ($request->cursor && $request->cursor !== '') {
+                $link .= '&cursor=' . $request->cursor;
+                \Log::info("Fetching tweets with cursor: $request->cursor");
             } else {
-                $link = 'https://' . env('RAPIDAPI_HOST') . '/user-media?user=' . $userId;
+                \Log::info("Fetching tweets without cursor");
             }
 
             $response = $client->request('GET', $link, [
@@ -154,22 +156,39 @@ class TwitterController extends Controller
                 ],
             ]);
 
-            $tweetsObject = json_decode($response->getBody());
+            $responseBody = $response->getBody()->getContents();
+            $tweetsObject = json_decode($responseBody);
             $tweets = [];
 
+            // Log the response structure for debugging
+            if (!isset($tweetsObject->result->timeline->instructions)) {
+                \Log::error("Invalid API response structure for $handle", [
+                    'response_sample' => substr($responseBody, 0, 500)
+                ]);
+                return [
+                    'userId' => $userId,
+                    'handle' => $handle,
+                    'error' => 'Invalid API response structure'
+                ];
+            }
+
             // Parse the response structure from /user-media endpoint
-            if (isset($tweetsObject->result->timeline->instructions)) {
-                foreach ($tweetsObject->result->timeline->instructions as $instruction) {
-                    if ($instruction->type === 'TimelineAddEntries' && isset($instruction->entries)) {
-                        $tweets = $instruction->entries;
-                        break;
-                    }
+            $instructionTypes = [];
+            foreach ($tweetsObject->result->timeline->instructions as $instruction) {
+                $instructionTypes[] = $instruction->type ?? 'unknown';
+                if ($instruction->type === 'TimelineAddEntries' && isset($instruction->entries)) {
+                    $tweets = $instruction->entries;
+                    break;
                 }
             }
             
             // If no tweets in API response
             if (empty($tweets)) {
-                \Log::info("No tweets in API response for user: $handle (ID: $userId)");
+                \Log::warning("No tweets found for $handle (ID: $userId)", [
+                    'instruction_types' => $instructionTypes,
+                    'has_timeline' => isset($tweetsObject->result->timeline),
+                    'cursor_sent' => $request->cursor ?? 'none'
+                ]);
                 return [
                     'userId' => $userId,
                     'handle' => $handle,

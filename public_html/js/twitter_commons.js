@@ -25,10 +25,10 @@ $( document ).ready(function() {
 				var handle = $('#twitter_handle_input').val();
 			}
 		}
+		var cursor = null;
 		if($(this).hasClass('load_more_tweets')) {
-			var cursor = $('#cursor').val();
+			cursor = $('#cursor').val();
 		} else {
-			var cursor = false;
 			$('.tweets').remove();
 		}
 		
@@ -52,9 +52,19 @@ $( document ).ready(function() {
 		if ($('#load_more_tweets').is(":hidden")) {
 			scroll();
 		}
+		
+		// Build AJAX data - only include cursor if it has a valid value
+		var ajaxData = { handle: handle };
+		if (cachedUserId) {
+			ajaxData.userId = cachedUserId;
+		}
+		if (cursor) {
+			ajaxData.cursor = cursor;
+		}
+		
 		$.ajax({
 		  type:"POST",
-		  data: { handle: handle, cursor: cursor, userId: cachedUserId}
+		  data: ajaxData
 		}).done(function(data) {
 		  if (typeof(data) == 'object') {
 		  if (data.hasOwnProperty('status')) {
