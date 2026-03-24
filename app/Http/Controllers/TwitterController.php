@@ -133,10 +133,11 @@ class TwitterController extends Controller
                 if (!$userId) {
                     return ['error' => 'User not found'];
                 }
-                
-                // Wait 1 second before next API call to respect rate limit (1 req/sec)
-                sleep(1);
             }
+            
+            // ALWAYS wait 1 second before calling /user-media to respect rate limit (1 req/sec)
+            // This applies whether userId was cached or freshly fetched
+            sleep(1);
 
             // Get user media using user ID
             if ($request->cursor) {
@@ -267,20 +268,20 @@ class TwitterController extends Controller
 
             $tweetIdLink = $request->tweet_id;
 
-            // Support both twitter.com and x.com URLs
-            if (strpos($tweetIdLink, 'x.com') !== false) {
-                $tweetId = trim(explode('/', trim(substr($tweetIdLink, strpos($tweetIdLink, 'x.com') + 6)))[2]);
+            // Support both twitter.com and x.com URLs - extract tweet ID
+            // Format: https://x.com/username/status/1234567890 or https://twitter.com/username/status/1234567890
+            if (preg_match('/\/status\/([0-9]+)/', $tweetIdLink, $matches)) {
+                $tweetId = $matches[1];
             } else {
-                $tweetId = trim(explode('/', trim(substr($tweetIdLink, strpos($tweetIdLink, 'twitter.com') + 12)))[2]);
+                return ['error' => 'Invalid tweet URL format'];
             }
 
             $request->session()->forget('tweet');
 
             $client = new \GuzzleHttp\Client();
 
-            // https://rapidapi.com/davethebeast/api/twitter241
-
-            $response = $client->request('GET', 'https://' . env('RAPIDAPI_HOST') . '/tweet?pid='.$tweetId, [
+            // Use /tweet-v2 endpoint for new API structure
+            $response = $client->request('GET', 'https://' . env('RAPIDAPI_HOST') . '/tweet-v2?pid='.$tweetId, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'X-RapidAPI-Host' => env('RAPIDAPI_HOST'),
@@ -290,36 +291,57 @@ class TwitterController extends Controller
 
             $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
             
-            $tweet = json_decode($response->getBody());
-
+            $responseData = json_decode($response->getBody());
             $tweetData = array();
 
-            if(isset($tweet->tweet->extended_entities)) {
-                $screenName = $tweet->user->legacy->screen_name;
-                foreach ($tweet->tweet->extended_entities->media as $media) {
+            // New /tweet-v2 API structure: result.tweetResult.result
+            $tweetResult = $responseData->result->tweetResult->result ?? null;
+            
+            if (!$tweetResult) {
+                return ['error' => 'Tweet not found or invalid response'];
+            }
 
-                    if (!in_array ($media->id_str , $uploadMediaIds)) {
-                        $tweetData[$media->id_str]['img_url'] = $media->media_url_https;
-                        $tweetData[$media->id_str]['expanded_url'] = $media->expanded_url;
-                        $tweetData[$media->id_str]['media_id'] = $media->id_str;
-                        $tweetData[$media->id_str]['tweet_id'] = $tweet->tweet->id_str;
-                        $tweetData[$media->id_str]['tweet_text'] = $tweet->tweet->full_text;
-                        $tweetData[$media->id_str]['tweet_time'] = $tweet->tweet->created_at;
-                        $tweetData[$media->id_str]['media_type'] = $media->type;
-                        $tweetData[$media->id_str]['screenName'] = $screenName;
-                        foreach ($tweet->tweet->entities->hashtags as $hashtag) {
-                            $tweetData[$media->id_str]['hashtags'][] = $hashtag->text;
+            if(isset($tweetResult->legacy->extended_entities)) {
+                $tweetLegacy = $tweetResult->legacy;
+                $screenName = $tweetResult->core->user_results->result->legacy->screen_name ?? '';
+                
+                foreach ($tweetLegacy->extended_entities->media as $media) {
+                    // Skip already uploaded media
+                    if (in_array($media->id_str, $uploadMediaIds)) {
+                        continue;
+                    }
+
+                    $mediaId = $media->id_str;
+                    
+                    $tweetData[$mediaId] = [
+                        'img_url' => $media->media_url_https,
+                        'expanded_url' => $media->expanded_url,
+                        'media_id' => $mediaId,
+                        'tweet_id' => $tweetLegacy->id_str,
+                        'tweet_text' => $tweetLegacy->full_text,
+                        'tweet_time' => $tweetLegacy->created_at,
+                        'media_type' => $media->type,
+                        'screenName' => $screenName,
+                        'hashtags' => []
+                    ];
+
+                    // Extract hashtags
+                    if (isset($tweetLegacy->entities->hashtags)) {
+                        foreach ($tweetLegacy->entities->hashtags as $hashtag) {
+                            $tweetData[$mediaId]['hashtags'][] = $hashtag->text;
                         }
                     }
-                    if ($media->type == 'video') {
+
+                    // Extract video URL if it's a video
+                    if ($media->type == 'video' && isset($media->video_info)) {
+                        $tweetData[$mediaId]['video_info'] = $media->video_info;
+                        
+                        // Find highest bitrate video variant
                         $bitrate = 0;
-                        $tweetData[$media->id_str]['video_info'] = $media->video_info;
                         foreach ($media->video_info->variants as $video) {
-                            if (isset($video->bitrate)) {
-                                if ($video->bitrate > $bitrate) {
-                                    $bitrate = $video->bitrate;
-                                        $tweetData[$media->id_str]['video_url'] = $video->url;
-                                }
+                            if (isset($video->bitrate) && $video->bitrate > $bitrate) {
+                                $bitrate = $video->bitrate;
+                                $tweetData[$mediaId]['video_url'] = $video->url;
                             }
                         }
                     }
