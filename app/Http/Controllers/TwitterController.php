@@ -166,12 +166,13 @@ class TwitterController extends Controller
                 }
             }
             
-            // If no tweets found, return early with userId/handle for debugging
+            // If no tweets in API response
             if (empty($tweets)) {
+                \Log::info("No tweets in API response for user: $handle (ID: $userId)");
                 return [
                     'userId' => $userId,
                     'handle' => $handle,
-                    'message' => 'No media tweets found for this user'
+                    'message' => 'No media tweets found for this user (empty API response)'
                 ];
             }
 
@@ -179,6 +180,7 @@ class TwitterController extends Controller
             $uploadMediaIds = Upload::where('status', '>', 0)->take(1000)->pluck('media_id')->toArray();
             
             $tweetData = [];
+            $processedCount = 0;
             
             foreach($tweets as $tweet) {
                 // Handle cursor for pagination
@@ -189,9 +191,10 @@ class TwitterController extends Controller
                     continue;
                 }
 
+                $processedCount++;
+                
                 // Extract tweet data - /user-media returns only media tweets
                 $tweetResult = null;
-                $screenName = null;
 
                 // Handle different entry types
                 if ($tweet->content->entryType == "TimelineTimelineModule") {
@@ -203,7 +206,7 @@ class TwitterController extends Controller
                         }
                     }
                 } else if ($tweet->content->entryType == "TimelineTimelineItem") {
-                    // Single item
+                    // Single item - matches your JSON structure
                     $tweetResult = $tweet->content->itemContent->tweet_results->result ?? null;
                     if ($tweetResult) {
                         $this->extractMediaData($tweetResult, $uploadMediaIds, $tweetData);
@@ -211,9 +214,21 @@ class TwitterController extends Controller
                 }
             }
             
+            \Log::info("Processed $processedCount tweets for $handle, extracted " . (count($tweetData) - (isset($tweetData['cursor']) ? 1 : 0)) . " media items");
+            
             // Add userId to response for client-side caching
             $tweetData['userId'] = $userId;
             $tweetData['handle'] = $handle;
+            
+            // Check if we have actual media data (not just cursor/userId/handle)
+            $mediaCount = count(array_filter(array_keys($tweetData), function($key) {
+                return !in_array($key, ['cursor', 'userId', 'handle']);
+            }));
+            
+            if ($mediaCount === 0 && $processedCount > 0) {
+                \Log::info("No media extracted for $handle - all may be already uploaded or tweets have no media");
+                $tweetData['message'] = 'All media from this user has already been uploaded or user has no media tweets';
+            }
             
             $request->session()->put('tweet', $tweetData);
 
