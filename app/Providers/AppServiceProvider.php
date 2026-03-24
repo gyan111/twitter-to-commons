@@ -16,11 +16,6 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->usePublicPath(__DIR__.'/../../public_html');
-        
-        // Force HTTPS URLs when accessed via HTTPS
-        if (request()->secure()) {
-            URL::forceScheme('https');
-        }
     }
 
     /**
@@ -30,5 +25,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         Paginator::useBootstrap();
+        
+        // Force HTTPS URLs when accessed via HTTPS (after request is available)
+        if (request()->secure()) {
+            URL::forceScheme('https');
+        }
     }
 }
