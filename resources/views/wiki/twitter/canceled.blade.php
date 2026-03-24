@@ -1,10 +1,10 @@
 @extends('wiki.twitter.layout')
 
-@section('pageTitle', 'Canceled Tweets on Twitter to Commons')
+@section('pageTitle', 'Canceled Posts on X (Twitter) to Commons')
 
 @section('css')
 
-<link href="{{ secure_asset('css/twitter_commons.css') }}" rel="stylesheet">
+<link href="{{ asset('css/twitter_commons.css') }}" rel="stylesheet">
 
 @endsection
 
@@ -29,7 +29,7 @@
 						</button>
 					</div>
 				@endif
-				<p><strong>Canceled Tweets using this tool.</strong></p>
+				<p><strong>Canceled Posts using this tool.</strong></p>
 				<a href="{{ url('uploads') }}">Uploaded images</a>
 			</div>
 		</div>
@@ -71,7 +71,7 @@
 					{{$upload->form_data}}
 				</div>
 				<div class="col-sm-2 text-center">
-					<a target="_blank" href="https://twitter.com/ipr_odisha/status/{{$upload->tweet_id}}">Tweet Link</a>
+					<a target="_blank" href="https://x.com/i/status/{{$upload->tweet_id}}">Post Link</a>
 				</div>
 				@if(isset($user) && $user->is_admin == 1)
 				<div class="col-sm-1 text-center">

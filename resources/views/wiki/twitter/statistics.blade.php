@@ -1,10 +1,10 @@
 @extends('wiki.twitter.layout')
 
-@section('pageTitle', 'All statistics of Twitter to Commons')
+@section('pageTitle', 'All statistics of X (Twitter) to Commons')
 
 @section('css')
 
-<link href="{{ secure_asset('css/twitter_commons.css') }}" rel="stylesheet">
+<link href="{{ asset('css/twitter_commons.css') }}" rel="stylesheet">
 
 @endsection
 

@@ -1,10 +1,10 @@
 @extends('wiki.twitter.layout')
 
-@section('pageTitle', 'Uploads on Twitter to Commons')
+@section('pageTitle', 'Uploads on X (Twitter) to Commons')
 
 @section('css')
 
-<link href="{{ secure_asset('css/twitter_commons.css') }}" rel="stylesheet">
+<link href="{{ asset('css/twitter_commons.css') }}" rel="stylesheet">
 
 @endsection
 
@@ -50,7 +50,7 @@
 					<a target="_blank" href="{{$upload->success_url}}">Commons Link</a>
 				</div>
 				<div class="col-sm-2 text-center">
-					<a target="_blank" href="https://twitter.com/ipr_odisha/status/{{$upload->tweet_id}}">Tweet Link</a>
+					<a target="_blank" href="https://x.com/i/status/{{$upload->tweet_id}}">Post Link</a>
 				</div>
 			</div>
 			@endforeach

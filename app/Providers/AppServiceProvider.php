@@ -2,37 +2,26 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Schema;
-
 use Illuminate\Pagination\Paginator;
-
-
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap any application services.
-     *
-     * @return void
+     * Register any application services.
      */
-    public function boot()
+    public function register(): void
     {
-        Schema::defaultStringLength(191);
-        Paginator::useBootstrap();
+        $this->app->usePublicPath(__DIR__.'/../../public_html');
     }
 
     /**
-     * Register any application services.
-     *
-     * @return void
+     * Bootstrap any application services.
      */
-    public function register()
+    public function boot(): void
     {
-        // $this->app->bind('path.public', function() {
-        //     return base_path().DIRECTORY_SEPARATOR.'public_html';
-        // });
-        // $app->usePublicPath(__DIR__.'/../../public_html');
-        $this->app->usePublicPath(__DIR__.'/../../public_html');
+        Schema::defaultStringLength(191);
+        Paginator::useBootstrap();
     }
 }

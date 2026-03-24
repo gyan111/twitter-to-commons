@@ -1,15 +1,15 @@
 @extends('wiki.twitter.layout')
 
-@section('pageTitle', 'Request Twitter Account')
+@section('pageTitle', 'Request X (Twitter) Account')
 
-@section('pageKeywords', 'Request Twitter Account')
+@section('pageKeywords', 'Request X (Twitter) Account')
 
-@section('pageDescription', 'Request new acccount on twitter to commons')
+@section('pageDescription', 'Request new account on X (Twitter) to Commons')
 
 @section('css')
 
-<link href="{{ secure_asset('css/style.css') }}" rel="stylesheet">
-<link href="{{ secure_asset('css/twitter_commons.css') }}" rel="stylesheet">
+<link href="{{ asset('css/style.css') }}" rel="stylesheet">
+<link href="{{ asset('css/twitter_commons.css') }}" rel="stylesheet">
 
 @endsection
 
@@ -42,7 +42,7 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><a target="_blank" href="https://twitter.com/CMO_Odisha">CMO_Odisha</a></td>
+							<td><a target="_blank" href="https://x.com/CMO_Odisha">CMO_Odisha</a></td>
 							<td>CMO_Odisha</td>
 							<td>@{{GoO-donation}}</td>
 							<td>Content donated by Government of Odisha</td>
@@ -59,7 +59,7 @@
 					@csrf
 				  	<div class="form-group">
 		            	<!-- <label for="handle" class="col-form-label">Twitter Handle</label> -->
-		            	<input type="text" class="form-control" id="handle" name="handle" placeholder="Enter the twitter handle/username" required>
+		            	<input type="text" class="form-control" id="handle" name="handle" placeholder="Enter the X (Twitter) handle/username" required>
 					</div>
 					<div class="form-group">
 		            	<!-- <label for="name" class="col-form-label">Name</label> -->
@@ -94,9 +94,9 @@
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 
-<script src="{{ secure_asset('js/jquery-ui.min.js') }}"></script>
-<script src="{{ secure_asset('js/twitter_commons.js') }}"></script>
+<script src="{{ asset('js/jquery-ui.min.js') }}"></script>
+<script src="{{ asset('js/twitter_commons.js') }}"></script>
 <script type="text/javascript">
-    var base_url = '{{ secure_url('/') }}';
+    var base_url = '{{ url('/') }}';
 </script>
 @endsection

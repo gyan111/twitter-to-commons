@@ -1,15 +1,15 @@
 @extends('wiki.twitter.layout')
 
-@section('pageTitle', 'Twitter to Commons')
+@section('pageTitle', 'X (Twitter) to Commons')
 
-@section('pageKeywords', 'Twitter, Wikimedia Commons')
+@section('pageKeywords', 'X, Twitter, Wikimedia Commons')
 
-@section('pageDescription', 'Upload photos directly from twitter to wikimedia commons')
+@section('pageDescription', 'Upload photos directly from X (Twitter) to Wikimedia Commons')
 
 @section('css')
 
-<link href="{{ secure_asset('css/style.css') }}" rel="stylesheet">
-<link href="{{ secure_asset('css/twitter_commons.css?3') }}" rel="stylesheet">
+<link href="{{ asset('css/style.css') }}" rel="stylesheet">
+<link href="{{ asset('css/twitter_commons.css?3') }}" rel="stylesheet">
 
 @endsection
 
@@ -23,11 +23,11 @@
 		</div> -->
 		<div class="row">
 			<div class="text-center col-sm-12">
-				<img src="{{ secure_asset('img/main_image.png') }}" width="150px" alt="Twitter to Commons" title="Twitter to Commons">
-				<h5><strong>Twitter to commons</strong></h5>
-				<p><strong>Upload photos from Twitter to Wikimedia Commons.</strong></p>
+				<img src="{{ asset('img/main_image.png') }}" width="150px" alt="X (Twitter) to Commons" title="X (Twitter) to Commons">
+				<h5><strong>X (Twitter) to Commons</strong></h5>
+				<p><strong>Upload photos from X (Twitter) to Wikimedia Commons.</strong></p>
 				<!-- <p>All listed accounts have made their media free licensed with an OTRS token</p> -->
-				<div class="text-center"><label for="twitter_handles text-center">You can choose from some <strong>free licensed accounts</strong> or enter a <strong>twitter handle</strong> or paste a <strong>tweet link</strong>.</label></div>
+				<div class="text-center"><label for="twitter_handles text-center">You can choose from some <strong>free licensed accounts</strong> or enter an <strong>X (Twitter) handle</strong> or paste a <strong>post link</strong>.</label></div>
 			</div>
 		</div>
 
@@ -51,7 +51,7 @@
 				  	<div class="form-group">
 						<div class="text-center"><label for="twitter_handles text-center">Please choose appropriate method.</label></div>
 						<select class="form-control" id="twitter_handles_select" required>
-						  	<option value="" selected>Select a free licensed Twitter handle </option>
+						  	<option value="" selected>Select a free licensed X (Twitter) handle </option>
 						  	@foreach($twitters as $twitter)
 						  	<option value="{{$twitter->handle}}">{{$twitter->name}}</option>
 						  	@endforeach
@@ -61,7 +61,7 @@
 					<div class="form-group"></div>
 					<div class="form-group">
 						<!-- <div class="text-center"><label for="twitter_handle_input">Enter a twitter handle/username</label></div> -->
-						<input type="text" class="form-control" name="twitter_handle_input" id="twitter_handle_input" placeholder="Enter a twitter handle/username" autocomplete="on">
+						<input type="text" class="form-control" name="twitter_handle_input" id="twitter_handle_input" placeholder="Enter an X (Twitter) handle/username" autocomplete="on">
 					</div>
 					<!-- <div class="form-group">
 						<select class="form-control" id="tweet_number" required>
@@ -77,7 +77,7 @@
 					<div class="form-group"></div>
 					<div class="form-group">
 						<!-- <div class="text-center"><label for="tweet_link_input">Enter a tweet link</label></div> -->
-						<input type="text" class="form-control" name="tweet_link_input" id="tweet_link_input" placeholder="Paste a tweet link">
+						<input type="text" class="form-control" name="tweet_link_input" id="tweet_link_input" placeholder="Paste an X (Twitter) post link">
 						<div class="form-group"></div>
 						<button type="button" class="btn btn-primary col-sm-12" id="show_tweet_button">Show Tweet Details</button>
 						
@@ -86,7 +86,7 @@
 			</div>
 		</div>
 		<div class="alert text-center">
-			<div class="text-center"><strong>Select twitter handle and click on Show Tweets button.</strong></div>
+			<div class="text-center"><strong>Select X (Twitter) handle and click on Show Tweets button.</strong></div>
 		</div>
 		<div class="row" id="tweet_div">
 			<div class="row col-sm-12 shadow-sm p-2 mb-2 bg-white rounded">
@@ -112,7 +112,7 @@
 		</div>
 		<div class="row mt-6 mb-6" id="loading">
 			<div class="col-sm-12 text-center">
-				<img src="{{ secure_asset('img/loading.gif') }}">
+				<img src="{{ asset('img/loading.gif') }}">
 			</div>
 		</div>
 		<div class="row mt-6">
@@ -207,9 +207,9 @@
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 
-<script src="{{ secure_asset('js/jquery-ui.min.js') }}"></script>
-<script src="{{ secure_asset('js/twitter_commons.js?31032020') }}"></script>
+<script src="{{ asset('js/jquery-ui.min.js') }}"></script>
+<script src="{{ asset('js/twitter_commons.js?31032020') }}"></script>
 <script type="text/javascript">
-    var base_url = '{{ secure_url('/') }}';
+    var base_url = '{{ url('/') }}';
 </script>
 @endsection

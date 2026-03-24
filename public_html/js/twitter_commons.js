@@ -32,6 +32,20 @@ $( document ).ready(function() {
 			$('.tweets').remove();
 		}
 		
+		// Check for cached userId to reduce API calls
+		var cachedUserId = null;
+		try {
+			var userCache = localStorage.getItem('twitter_user_cache');
+			if (userCache) {
+				var cache = JSON.parse(userCache);
+				if (cache[handle]) {
+					cachedUserId = cache[handle];
+				}
+			}
+		} catch(e) {
+			// localStorage not available or error
+		}
+		
 		$('#loading').show();
 		$('.no_tweets').hide();
 		$('#tweet_div').show('slow');
@@ -40,7 +54,7 @@ $( document ).ready(function() {
 		}
 		$.ajax({
 		  type:"POST",
-		  data: { handle: handle, cursor: cursor}
+		  data: { handle: handle, cursor: cursor, userId: cachedUserId}
 		}).done(function(data) {
 		  if (typeof(data) == 'object') {
 		  if (data.hasOwnProperty('status')) {
@@ -56,6 +70,19 @@ $( document ).ready(function() {
 				$('.no_tweets').show();
 				return false;
 			}
+			
+			// Cache userId to localStorage to reduce API calls
+			if (data.userId && data.handle) {
+				try {
+					var userCache = localStorage.getItem('twitter_user_cache');
+					var cache = userCache ? JSON.parse(userCache) : {};
+					cache[data.handle] = data.userId;
+					localStorage.setItem('twitter_user_cache', JSON.stringify(cache));
+				} catch(e) {
+					// localStorage not available
+				}
+			}
+			
 		  	$.each( data, function( key, value ) {
 		  		if (value.video_url) {
 		  			var html = '<div class="row col-sm-12 mt-1 shadow-sm p-2 mb-2 bg-white rounded tweets">'

@@ -1,10 +1,10 @@
 @extends('wiki.twitter.layout')
 
-@section('pageTitle', 'Administration on Twitter to Commons')
+@section('pageTitle', 'Administration on X (Twitter) to Commons')
 
 @section('css')
 
-<link href="{{ secure_asset('css/twitter_commons.css') }}" rel="stylesheet">
+<link href="{{ asset('css/twitter_commons.css') }}" rel="stylesheet">
 
 @endsection
 
@@ -89,7 +89,7 @@
 						@foreach($accountRequests as $accountRequest)
 							@if ($accountRequest->is_approved == 0)
 							<tr>
-								<td><a target="_blank" href="https://twitter.com/{{ $accountRequest->handle }}">{{ $accountRequest->handle }}</td>
+								<td><a target="_blank" href="https://x.com/{{ $accountRequest->handle }}">{{ $accountRequest->handle }}</td>
 								<td>{{ $accountRequest->name }}</td>
 								<td>{{ $accountRequest->template }}</td>
 								<td>{{ $accountRequest->category }}</td>
@@ -117,7 +117,7 @@
 						@foreach($accountRequests as $accountRequest)
 							@if ($accountRequest->is_approved == 1)
 							<tr>
-								<td><a target="_blank" href="https://twitter.com/{{ $accountRequest->handle }}">{{ $accountRequest->handle }}</td>
+								<td><a target="_blank" href="https://x.com/{{ $accountRequest->handle }}">{{ $accountRequest->handle }}</td>
 								<td>{{ $accountRequest->name }}</td>
 								<td>{{ $accountRequest->template }}</td>
 								<td>{{ $accountRequest->category }}</td>
@@ -129,7 +129,7 @@
 						@foreach($twitterAccounts as $twitterAccount)
 							@if ($twitterAccount->id < 5)
 							<tr>
-								<td><a target="_blank" href="https://twitter.com/{{ $twitterAccount->handle }}">{{ $twitterAccount->handle }}</td>
+								<td><a target="_blank" href="https://x.com/{{ $twitterAccount->handle }}">{{ $twitterAccount->handle }}</td>
 								<td>{{ $twitterAccount->name }}</td>
 								<td>{{ $twitterAccount->template }}</td>
 								<td>{{ $twitterAccount->category }}</td>
@@ -156,7 +156,7 @@
 						@foreach($accountRequests as $accountRequest)
 							@if ($accountRequest->is_approved ==2)
 							<tr>
-								<td><a target="_blank" href="https://twitter.com/{{ $accountRequest->handle }}">{{ $accountRequest->handle }}</td>
+								<td><a target="_blank" href="https://x.com/{{ $accountRequest->handle }}">{{ $accountRequest->handle }}</td>
 								<td>{{ $accountRequest->name }}</td>
 								<td>{{ $accountRequest->template }}</td>
 								<td>{{ $accountRequest->category }}</td>
