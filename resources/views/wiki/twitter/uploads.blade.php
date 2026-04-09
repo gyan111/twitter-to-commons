@@ -54,7 +54,7 @@
 				</div>
 			</div>
 			@endforeach
-			{{ $uploads->links() }}
+			{{ $uploads->links('pagination::bootstrap-4') }}
 		</div>
 	</section>
 </div>

@@ -76,7 +76,7 @@
 						@endforeach
 					</tbody>
 				</table>
-				{{ $uploaders->links() }}
+				{{ $uploaders->links('pagination::bootstrap-4') }}
 			</div>	
 		</div>
 		
