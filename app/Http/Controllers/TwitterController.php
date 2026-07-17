@@ -965,7 +965,7 @@ class TwitterController extends Controller
             ];
 
             // Extract hashtags
-            foreach ($tweetLegacy->entities->hashtags as $hashtag) {
+            foreach ($tweetLegacy->entities->hashtags ?? [] as $hashtag) {
                 $tweetData[$mediaId]['hashtags'][] = $hashtag->text;
             }
 
