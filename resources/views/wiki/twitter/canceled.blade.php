@@ -65,7 +65,7 @@
 					<a target="_blank" href="https://commons.wikimedia.org/wiki/User:{{$upload->user->wiki_username}}">{{$upload->user->wiki_username}}</a>
 				</div>
 				<div class="col-sm-2 text-center">
-					<a data-fancybox="gallery" href="{{$upload->image_url_twitter}}"><img src="{{$upload->image_url_twitter}}" width="50px"></a>
+					-
 				</div>
 				<div class="col-sm-3 text-center">
 					{{$upload->form_data}}

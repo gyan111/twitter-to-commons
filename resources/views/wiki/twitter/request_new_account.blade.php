@@ -91,8 +91,8 @@
 </div>
 @endsection
 @section('js')
-<script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
-<script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+<script src="{{ asset('lib/sweetalert/sweetalert.min.js') }}"></script>
+<script src="{{ asset('lib/jquery-validate/jquery.validate.min.js') }}"></script>
 
 <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('js/twitter_commons.js') }}"></script>

@@ -15,9 +15,9 @@
   <!-- Bootstrap css -->
   <!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
   <!-- <link href="{{ asset('lib/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"> -->
-  <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ asset('lib/bootstrap/css/bootstrap.min.css') }}" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+  <link rel="stylesheet" href="{{ asset('lib/fancybox/jquery.fancybox.min.css') }}" />
 
 
   @yield('css')
@@ -30,15 +30,15 @@
 
   <!-- JavaScript Libraries -->
   <!-- <script src="{{ asset('lib/jquery/jquery.min.js') }}"></script> -->
-  <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="{{ asset('lib/jquery/jquery.min.js') }}"></script>
   <!-- <script src="{{ asset('lib/jquery/jquery-migrate.min.js') }}"></script> -->
-  <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery-migrate/3.0.1/jquery-migrate.min.js"></script>
+  <script src="{{ asset('lib/jquery/jquery-migrate.min.js') }}"></script>
   <!-- <script src="{{ asset('lib/bootstrap/js/bootstrap.bundle.min.js') }}"></script> -->
-  <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ asset('lib/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/1.17.1/simple-lightbox.min.js"></script> -->
 
-  <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script src="{{ asset('lib/fancybox/jquery.fancybox.min.js') }}"></script>
 
   @yield('js')
 

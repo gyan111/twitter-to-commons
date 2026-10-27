@@ -937,6 +937,33 @@ class TwitterController extends Controller
         return json_decode(json_encode($categories));
     }
 
+    /**
+     * Proxy Twitter/X media (images and videos) through the tool so visitors'
+     * browsers never contact *.twimg.com directly (Toolforge privacy policy
+     * forbids embedding third-party assets).
+     */
+    public function mediaProxy(Request $request) {
+        $url = $request->query('u', '');
+        $host = parse_url($url, PHP_URL_HOST);
+
+        if (!$host || parse_url($url, PHP_URL_SCHEME) !== 'https'
+            || !preg_match('~(^|\.)twimg\.com$~i', $host)) {
+            abort(404);
+        }
+
+        $client = new GuzzleClient(['timeout' => 15]);
+        $response = $client->get($url, ['http_errors' => false]);
+
+        if ($response->getStatusCode() !== 200) {
+            abort(404);
+        }
+
+        return response($response->getBody()->getContents(), 200, [
+            'Content-Type' => $response->getHeaderLine('Content-Type') ?: 'application/octet-stream',
+            'Cache-Control' => 'public, max-age=86400',
+        ]);
+    }
+
     public function searchTwitterUser(Request $request) {
         $query = $request->q;
 

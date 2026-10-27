@@ -44,7 +44,16 @@
 					<a target="_blank" href="https://commons.wikimedia.org/wiki/User:{{$upload->user->wiki_username}}">{{$upload->user->wiki_username}}</a>
 				</div>
 				<div class="col-sm-3 text-center">
-					<a data-fancybox="gallery" href="{{$upload->image_url_twitter}}"><img src="{{$upload->image_url_twitter}}" width="50px"></a>
+					@php
+						$localImage = $upload->image_url_local && file_exists($upload->image_url_local)
+							? asset('file/temp/' . basename($upload->image_url_local))
+							: null;
+					@endphp
+					@if ($localImage)
+						<a data-fancybox="gallery" href="{{ $localImage }}"><img src="{{ $localImage }}" width="50px"></a>
+					@else
+						-
+					@endif
 				</div>
 				<div class="col-sm-2 text-center">
 					<a target="_blank" href="{{$upload->success_url}}">Commons Link</a>

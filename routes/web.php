@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('logout', [TwitterController::class, 'logout']);
 Route::get('authorize', [TwitterController::class, 'authorizeApp']);
 Route::get('search', [TwitterController::class, 'search']);
+Route::get('media-proxy', [TwitterController::class, 'mediaProxy']);
 
 Route::get('/', [TwitterController::class, 'twitter']);
 Route::post('/', [TwitterController::class, 'twitter']);
