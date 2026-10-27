@@ -97,6 +97,6 @@
 <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('js/twitter_commons.js') }}"></script>
 <script type="text/javascript">
-    var base_url = '{{ secure_url('/') }}';
+    var base_url = '{{ url('/') }}';
 </script>
 @endsection

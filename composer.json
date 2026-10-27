@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.4",
+        "php": "^8.5",
         "cloudconvert/cloudconvert-laravel": "^1.1",
         "guzzlehttp/guzzle": "^7.8",
         "hamstar/wikimate": "^1.0",

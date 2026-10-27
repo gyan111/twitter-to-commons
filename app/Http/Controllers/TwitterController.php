@@ -320,9 +320,14 @@ class TwitterController extends Controller
                 return ['error' => 'Tweet not found or invalid response'];
             }
 
+            // Unwrap nested results (e.g. TweetWithVisibilityResults)
+            if (isset($tweetResult->tweet)) {
+                $tweetResult = $tweetResult->tweet;
+            }
+
             if(isset($tweetResult->legacy->extended_entities)) {
                 $tweetLegacy = $tweetResult->legacy;
-                $screenName = $tweetResult->core->user_results->result->legacy->screen_name ?? '';
+                $screenName = $this->extractScreenName($tweetResult, $tweetLegacy);
                 
                 foreach ($tweetLegacy->extended_entities->media as $media) {
                     // Skip already uploaded media
@@ -484,7 +489,11 @@ class TwitterController extends Controller
 
         $media = $request->session()->get('media');
 
-        $screenName = $media['handle'];
+        $screenName = $media['handle'] ?? '';
+        if ($screenName === '' && isset($media['expanded_url'])
+            && preg_match('~(?:x\.com|twitter\.com)/([^/]+)/status/~', $media['expanded_url'], $matches)) {
+            $screenName = $matches[1];
+        }
 
         $categories = json_decode($request->categories, true);
         $categoryString = '';
@@ -542,7 +551,9 @@ class TwitterController extends Controller
             $permission = $request->permission;
         } else {
             $license = '{{cc-by-sa-4.0}}';
-            $author = '[https://x.com/' . $screenName . " " . $screenName . ']';
+            $author = $screenName !== ''
+                ? '[https://x.com/' . $screenName . ' ' . $screenName . ']'
+                : 'Unknown';
             $permission = $request->permission;
         }
 
@@ -550,7 +561,7 @@ class TwitterController extends Controller
 {{Information
 |description={{en|1='. $request->description .'}}
 |date='. $date->toDateTimeString() .'
-|source=[' . $media['expanded_url'] .' From X (Twitter) account of '. $screenName .']
+|source=[' . $media['expanded_url'] .' From X (Twitter)'. ($screenName !== '' ? ' account of '. $screenName : '') .']
 |author=' . $author . '
 |permission=' . $permission . '
 |other versions=
@@ -606,6 +617,18 @@ class TwitterController extends Controller
         );
         $uploadResponse = json_decode($uploadRequest);
 
+        if (!isset($uploadResponse->upload)) {
+            $apiMessage = $uploadResponse->error->info ?? 'Unexpected response from the wiki API';
+            \Log::warning('Commons upload failed', ['response' => substr($uploadRequest, 0, 2000)]);
+
+            $upload->response_message = $apiMessage;
+            $upload->save();
+
+            $responseData['status'] = 'error';
+            $responseData['message'] = $apiMessage;
+            return $responseData;
+        }
+
         if ($uploadResponse->upload->result == 'Success') {
             $upload->success_url = $uploadResponse->upload->imageinfo->descriptionurl;
             $upload->status = 1;
@@ -635,10 +658,13 @@ class TwitterController extends Controller
             }
             return $responseData;
         } else {
+            $upload->response_message = $uploadResponse->upload->result;
+            $upload->save();
 
+            $responseData['status'] = 'error';
+            $responseData['message'] = 'Upload failed: ' . $uploadResponse->upload->result;
+            return $responseData;
         }
-
-        var_dump($uploadResponse->upload->result);
 
 
     }
@@ -896,10 +922,14 @@ class TwitterController extends Controller
 
         $categoryRequest = $twitterClient->get('https://commons.wikimedia.org/w/api.php?action=opensearch&format=json&formatversion=2&search=category:' . $query . '&namespace=0%7C6%7C12%7C14%7C100%7C106&limit=10&suggest=true', [
             'headers' => ['Content-Type' => 'application/json',
+                          'User-Agent' => 'TwitterToCommons/1.0 (https://meta.wikimedia.org/wiki/Twitter_to_Commons)',
                         ],
         ]);
         $categoryResponse = $categoryRequest->getBody()->getContents();
-        $categoriesArray =  json_decode($categoryResponse);
+        $categoriesArray = json_decode($categoryResponse);
+        if (!is_array($categoriesArray) || !isset($categoriesArray[1])) {
+            return [];
+        }
         $categories = [];
         foreach($categoriesArray[1] as $key=>$category){
           $categories[$key]=str_replace("Category:","",$category);
@@ -932,16 +962,59 @@ class TwitterController extends Controller
     }
 
     /**
+     * Resolve the tweet author's screen name, tolerating the different
+     * shapes the Twitter/X API responses take (screen_name has moved
+     * out of the user legacy object in newer responses).
+     */
+    private function extractScreenName($tweetResult, $tweetLegacy = null) {
+        $paths = [
+            ['core', 'user_results', 'result', 'legacy', 'screen_name'],
+            ['core', 'user_results', 'result', 'core', 'screen_name'],
+            ['core', 'user_result', 'result', 'legacy', 'screen_name'],
+            ['core', 'user_result', 'result', 'core', 'screen_name'],
+        ];
+
+        foreach ($paths as $path) {
+            $node = $tweetResult;
+            foreach ($path as $key) {
+                if (!isset($node->$key)) {
+                    $node = null;
+                    break;
+                }
+                $node = $node->$key;
+            }
+            if (is_string($node) && $node !== '') {
+                return $node;
+            }
+        }
+
+        // Last resort: the handle is always embedded in the tweet URL
+        $expandedUrl = $tweetLegacy->extended_entities->media[0]->expanded_url
+            ?? $tweetLegacy->entities->urls[0]->expanded_url
+            ?? null;
+        if ($expandedUrl && preg_match('~(?:x\.com|twitter\.com)/([^/]+)/status/~', $expandedUrl, $m)) {
+            return $m[1];
+        }
+
+        return '';
+    }
+
+    /**
      * Extract media data from tweet result
      * Helper method to process media from /user-media endpoint
      */
     private function extractMediaData($tweetResult, $uploadMediaIds, &$tweetData) {
+        // Unwrap nested results (e.g. TweetWithVisibilityResults)
+        if (isset($tweetResult->tweet)) {
+            $tweetResult = $tweetResult->tweet;
+        }
+
         if (!isset($tweetResult->legacy->extended_entities)) {
             return;
         }
 
         $tweetLegacy = $tweetResult->legacy;
-        $screenName = $tweetResult->core->user_results->result->legacy->screen_name ?? '';
+        $screenName = $this->extractScreenName($tweetResult, $tweetLegacy);
 
         foreach ($tweetLegacy->extended_entities->media as $media) {
             // Skip already uploaded media
